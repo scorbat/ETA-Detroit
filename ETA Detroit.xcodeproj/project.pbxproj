@@ -56,12 +56,11 @@
 		84B57132266951A700D88A7C /* ETA Detroit */ = {
 			isa = PBXGroup;
 			children = (
+				84B5714826696B6100D88A7C /* View */,
+				84B5714726696B5B00D88A7C /* Model */,
 				84B57133266951A700D88A7C /* ETA_DetroitApp.swift */,
-				84B57135266951A700D88A7C /* ContentView.swift */,
 				84B57137266951A800D88A7C /* Assets.xcassets */,
-				84B5713C266951A800D88A7C /* Persistence.swift */,
 				84B57141266951A800D88A7C /* Info.plist */,
-				84B5713E266951A800D88A7C /* ETA_Detroit.xcdatamodeld */,
 				84B57139266951A800D88A7C /* Preview Content */,
 			);
 			path = "ETA Detroit";
@@ -73,6 +72,23 @@
 				84B5713A266951A800D88A7C /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		84B5714726696B5B00D88A7C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				84B5713C266951A800D88A7C /* Persistence.swift */,
+				84B5713E266951A800D88A7C /* ETA_Detroit.xcdatamodeld */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		84B5714826696B6100D88A7C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				84B57135266951A700D88A7C /* ContentView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
