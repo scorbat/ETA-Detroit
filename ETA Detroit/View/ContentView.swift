@@ -17,7 +17,7 @@ struct ContentView: View {
                 Button(action: {
                     
                 }) {
-                    Text("Test Button")
+                    CompanyCellView()
                 }
             }
         }
