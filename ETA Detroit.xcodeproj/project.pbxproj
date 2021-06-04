@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,10 @@
 		84B5713D266951A800D88A7C /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B5713C266951A800D88A7C /* Persistence.swift */; };
 		84B57140266951A800D88A7C /* ETA_Detroit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84B5713E266951A800D88A7C /* ETA_Detroit.xcdatamodeld */; };
 		84E37CF7266A654B00D82E28 /* CompanyCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E37CF6266A654B00D82E28 /* CompanyCellView.swift */; };
+		84E37CF9266A840800D82E28 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E37CF8266A840800D82E28 /* DataService.swift */; };
+		84E37CFC266A8B1300D82E28 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E37CFB266A8B1300D82E28 /* Constants.swift */; };
+		84E37CFE266A961700D82E28 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E37CFD266A961700D82E28 /* Company.swift */; };
+		84E37D02266AA2AA00D82E28 /* eta_detroit.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 84E37D01266AA2AA00D82E28 /* eta_detroit.sqlite */; };
 		8954696788AD0FFBC998AD85 /* Pods_ETA_Detroit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3B4557EF0ACBDBB4A23DC90D /* Pods_ETA_Detroit.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +33,10 @@
 		84B5713F266951A800D88A7C /* ETA_Detroit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ETA_Detroit.xcdatamodel; sourceTree = "<group>"; };
 		84B57141266951A800D88A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84E37CF6266A654B00D82E28 /* CompanyCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyCellView.swift; sourceTree = "<group>"; };
+		84E37CF8266A840800D82E28 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		84E37CFB266A8B1300D82E28 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		84E37CFD266A961700D82E28 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
+		84E37D01266AA2AA00D82E28 /* eta_detroit.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = eta_detroit.sqlite; sourceTree = "<group>"; };
 		D539230EF0DF22D319E08D2F /* Pods-ETA Detroit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETA Detroit.debug.xcconfig"; path = "Target Support Files/Pods-ETA Detroit/Pods-ETA Detroit.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -50,7 +58,6 @@
 				D539230EF0DF22D319E08D2F /* Pods-ETA Detroit.debug.xcconfig */,
 				3C777FD8266655AC53D5ECE6 /* Pods-ETA Detroit.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -83,12 +90,14 @@
 		84B57132266951A700D88A7C /* ETA Detroit */ = {
 			isa = PBXGroup;
 			children = (
+				84E37D01266AA2AA00D82E28 /* eta_detroit.sqlite */,
 				84B5714826696B6100D88A7C /* View */,
 				84B5714726696B5B00D88A7C /* Model */,
 				84B57133266951A700D88A7C /* ETA_DetroitApp.swift */,
 				84B57137266951A800D88A7C /* Assets.xcassets */,
 				84B57141266951A800D88A7C /* Info.plist */,
 				84B57139266951A800D88A7C /* Preview Content */,
+				84E37CFB266A8B1300D82E28 /* Constants.swift */,
 			);
 			path = "ETA Detroit";
 			sourceTree = "<group>";
@@ -106,6 +115,8 @@
 			children = (
 				84B5713C266951A800D88A7C /* Persistence.swift */,
 				84B5713E266951A800D88A7C /* ETA_Detroit.xcdatamodeld */,
+				84E37CF8266A840800D82E28 /* DataService.swift */,
+				84E37CFD266A961700D82E28 /* Company.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -178,6 +189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84E37D02266AA2AA00D82E28 /* eta_detroit.sqlite in Resources */,
 				84B5713B266951A800D88A7C /* Preview Assets.xcassets in Resources */,
 				84B57138266951A800D88A7C /* Assets.xcassets in Resources */,
 			);
@@ -235,8 +247,11 @@
 				84B57140266951A800D88A7C /* ETA_Detroit.xcdatamodeld in Sources */,
 				84E37CF7266A654B00D82E28 /* CompanyCellView.swift in Sources */,
 				84B5713D266951A800D88A7C /* Persistence.swift in Sources */,
+				84E37CF9266A840800D82E28 /* DataService.swift in Sources */,
+				84E37CFC266A8B1300D82E28 /* Constants.swift in Sources */,
 				84B57136266951A700D88A7C /* ContentView.swift in Sources */,
 				84B57134266951A700D88A7C /* ETA_DetroitApp.swift in Sources */,
+				84E37CFE266A961700D82E28 /* Company.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
