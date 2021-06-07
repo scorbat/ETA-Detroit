@@ -9,11 +9,8 @@ import Foundation
 
 struct Company: Identifiable {
     
+    var id: Int //database ID
     let name: String
     let imageURL: String
-    
-    var id: String {
-        return name
-    }
     
 }

@@ -13,16 +13,15 @@ struct CompanyCellView: View {
     let imageURL: String
     
     var body: some View {
-        HStack(spacing: 140.0) {
+        HStack(spacing: 20) {
             Image(imageURL)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 100, alignment: .center)
+                .frame(width: 100, height: 75, alignment: .center)
             Text(name)
                 .font(.title2)
         }
         .padding(.horizontal)
-        .frame(maxHeight: .infinity)
     }
 }
 

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -14,13 +13,21 @@ struct ContentView: View {
     private let companies: [Company] = DataService.shared.fetchCompanies()
 
     var body: some View {
-        ZStack {
-            List {
-                ForEach(companies) { company in
-                    CompanyCellView(
-                        name: company.name,
-                        imageURL: company.imageURL
-                    )
+        NavigationView {
+            VStack {
+                Text("ETA Detroit")
+                    .font(.title)
+                List {
+                    ForEach(companies) { company in
+                        NavigationLink(
+                            destination: RoutesView(company: company),
+                            label: {
+                                CompanyCellView(
+                                    name: company.name,
+                                    imageURL: company.imageURL
+                                )
+                            })
+                    }
                 }
             }
         }
