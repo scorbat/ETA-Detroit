@@ -7,9 +7,13 @@
 
 import Foundation
 
-struct Company {
+struct Company: Identifiable {
     
     let name: String
     let imageURL: String
+    
+    var id: String {
+        return name
+    }
     
 }

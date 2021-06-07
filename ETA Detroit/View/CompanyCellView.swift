@@ -8,21 +8,26 @@
 import SwiftUI
 
 struct CompanyCellView: View {
+    
+    let name: String
+    let imageURL: String
+    
     var body: some View {
-        HStack(spacing: 170.0) {
-            Image("ddot-logo")
+        HStack(spacing: 140.0) {
+            Image(imageURL)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 100, height: 100, alignment: .center)
-            Text("DDOT")
+                .frame(width: 100, alignment: .center)
+            Text(name)
                 .font(.title2)
         }
         .padding(.horizontal)
+        .frame(maxHeight: .infinity)
     }
 }
 
 struct CompanyCellView_Previews: PreviewProvider {
     static var previews: some View {
-        CompanyCellView()
+        CompanyCellView(name: "DDOT", imageURL: "ddot-logo")
     }
 }

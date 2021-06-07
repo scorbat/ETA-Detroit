@@ -11,23 +11,18 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    var companies: [Company]? = nil
+    private let companies: [Company] = DataService.shared.fetchCompanies()
 
     var body: some View {
         ZStack {
             List {
-                Button(action: {
-                    
-                    for company in companies {
-                        print(company.name)
-                    }
-                }) {
-                    CompanyCellView()
+                ForEach(companies) { company in
+                    CompanyCellView(
+                        name: company.name,
+                        imageURL: company.imageURL
+                    )
                 }
             }
-        }
-        .onAppear {
-            self.companies = DataService.shared.fetchCompanies()
         }
     }
 }
