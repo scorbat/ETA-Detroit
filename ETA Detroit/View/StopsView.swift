@@ -10,15 +10,20 @@ import SwiftUI
 struct StopsView: View {
     
     let route: Route
+    let color: Color
     
     var stops: [Stop] {
         return DataService.shared.fetchStops(for: route)
     }
     
     var body: some View {
-        List {
-            ForEach(stops) { stop in
-                StopCellView(stop: stop)
+        VStack {
+            Text("Stops for \(route.name)")
+                .font(.title)
+            List {
+                ForEach(stops) { stop in
+                    StopCellView(stop: stop, color: color)
+                }
             }
         }
     }
@@ -26,6 +31,6 @@ struct StopsView: View {
 
 struct StopsView_Previews: PreviewProvider {
     static var previews: some View {
-        StopsView(route: K.PREVIEW_ROUTE)
+        StopsView(route: K.PREVIEW_ROUTE, color: Color.purple)
     }
 }

@@ -22,9 +22,9 @@ struct RoutesView: View {
             List {
                 ForEach(routes) { route in
                     NavigationLink(
-                        destination: StopsView(route: route),
+                        destination: StopsView(route: route, color: company.color),
                         label: {
-                            RouteCellView(route: route)
+                            RouteCellView(route: route, color: company.color)
                         })
                 }
             }

@@ -10,10 +10,13 @@ import SwiftUI
 struct StopCellView: View {
     
     let stop: Stop
+    let color: Color
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             Text(stop.name)
+                .font(.headline)
+                .foregroundColor(color)
             Text("\(stop.latitude)")
             Text("\(stop.longitude)")
         }
@@ -22,6 +25,6 @@ struct StopCellView: View {
 
 struct StopCellView_Previews: PreviewProvider {
     static var previews: some View {
-        StopCellView(stop: K.PREVIEW_STOP)
+        StopCellView(stop: K.PREVIEW_STOP, color: Color.purple)
     }
 }

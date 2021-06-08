@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		840F2D9A266FB69B002A8BA6 /* StopsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2D99266FB69B002A8BA6 /* StopsView.swift */; };
 		840F2D9C266FB8C5002A8BA6 /* StopCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2D9B266FB8C5002A8BA6 /* StopCellView.swift */; };
+		840F2DA1266FDAA3002A8BA6 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2DA0266FDAA3002A8BA6 /* HexColor.swift */; };
 		84B57134266951A700D88A7C /* ETA_DetroitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B57133266951A700D88A7C /* ETA_DetroitApp.swift */; };
 		84B57136266951A700D88A7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B57135266951A700D88A7C /* ContentView.swift */; };
 		84B57138266951A800D88A7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84B57137266951A800D88A7C /* Assets.xcassets */; };
@@ -32,6 +33,7 @@
 		3C777FD8266655AC53D5ECE6 /* Pods-ETA Detroit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ETA Detroit.release.xcconfig"; path = "Target Support Files/Pods-ETA Detroit/Pods-ETA Detroit.release.xcconfig"; sourceTree = "<group>"; };
 		840F2D99266FB69B002A8BA6 /* StopsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopsView.swift; sourceTree = "<group>"; };
 		840F2D9B266FB8C5002A8BA6 /* StopCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopCellView.swift; sourceTree = "<group>"; };
+		840F2DA0266FDAA3002A8BA6 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		84B57130266951A700D88A7C /* ETA Detroit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ETA Detroit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B57133266951A700D88A7C /* ETA_DetroitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETA_DetroitApp.swift; sourceTree = "<group>"; };
 		84B57135266951A700D88A7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +83,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		840F2D9D266FD98E002A8BA6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				84E37CF8266A840800D82E28 /* DataService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		84B57127266951A700D88A7C = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +112,7 @@
 		84B57132266951A700D88A7C /* ETA Detroit */ = {
 			isa = PBXGroup;
 			children = (
+				840F2D9D266FD98E002A8BA6 /* Services */,
 				84E37D01266AA2AA00D82E28 /* eta_detroit.sqlite */,
 				84B5714826696B6100D88A7C /* View */,
 				84B5714726696B5B00D88A7C /* Model */,
@@ -127,7 +138,6 @@
 			children = (
 				84B5713C266951A800D88A7C /* Persistence.swift */,
 				84B5713E266951A800D88A7C /* ETA_Detroit.xcdatamodeld */,
-				84E37CF8266A840800D82E28 /* DataService.swift */,
 				84E37CFD266A961700D82E28 /* Company.swift */,
 				84E1504F266E8406005B1C15 /* Route.swift */,
 				84E15053266EA000005B1C15 /* Stop.swift */,
@@ -144,6 +154,7 @@
 				84E15051266E8CE7005B1C15 /* RouteCellView.swift */,
 				840F2D99266FB69B002A8BA6 /* StopsView.swift */,
 				840F2D9B266FB8C5002A8BA6 /* StopCellView.swift */,
+				840F2DA0266FDAA3002A8BA6 /* HexColor.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -269,6 +280,7 @@
 				840F2D9C266FB8C5002A8BA6 /* StopCellView.swift in Sources */,
 				84E15050266E8406005B1C15 /* Route.swift in Sources */,
 				84B5713D266951A800D88A7C /* Persistence.swift in Sources */,
+				840F2DA1266FDAA3002A8BA6 /* HexColor.swift in Sources */,
 				84E37CF9266A840800D82E28 /* DataService.swift in Sources */,
 				84E37CFC266A8B1300D82E28 /* Constants.swift in Sources */,
 				84B57136266951A700D88A7C /* ContentView.swift in Sources */,

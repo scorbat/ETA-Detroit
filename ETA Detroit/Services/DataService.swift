@@ -5,7 +5,7 @@
 //  Created by admin on 6/4/21.
 //
 
-import Foundation
+import SwiftUI
 import SQLite
 
 class DataService {
@@ -24,6 +24,8 @@ class DataService {
         }
     }
     
+    //MARK: - Database Methods
+    
     //fetches the list of companies monitored by the app
     func fetchCompanies() -> [Company] {
         var companies = [Company]()
@@ -31,15 +33,20 @@ class DataService {
         let companiesTable = Table("companies")
         let nameColumn = Expression<String>("name")
         let imageURLColumn = Expression<String>("bus_image_url")
+        let color = Expression<String>("brand_color")
         let id = Expression<Int>("id")
         
         do {
             for company in try db.prepare(companiesTable) {
+                //get color using extension for hex init
+                let hexColor = Color(hex: company[color]) ?? Color.purple //default purple
+                
                 companies.append(
                     Company(
                         id: company[id],
                         name: company[nameColumn],
-                        imageURL: company[imageURLColumn]
+                        imageURL: company[imageURLColumn],
+                        color: hexColor
                     )
                 )
             }
@@ -121,8 +128,6 @@ class DataService {
                                 longitude: stop[longitude]
                 ))
             }
-            
-            print(stops)
         } catch {
             print("Failed to perform query for fetching route stops, \(error)")
         }
