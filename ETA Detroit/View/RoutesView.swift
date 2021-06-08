@@ -21,7 +21,11 @@ struct RoutesView: View {
                 .font(.title)
             List {
                 ForEach(routes) { route in
-                    RouteCellView(route: route)
+                    NavigationLink(
+                        destination: StopsView(route: route),
+                        label: {
+                            RouteCellView(route: route)
+                        })
                 }
             }
         }
