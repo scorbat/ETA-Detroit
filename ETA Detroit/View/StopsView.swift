@@ -9,20 +9,27 @@ import SwiftUI
 
 struct StopsView: View {
     
+    @ObservedObject var dataService: DataService
+    
     let route: Route
     let color: Color
-    
-    var stops: [Stop] {
-        return DataService.shared.fetchStops(for: route)
-    }
     
     var body: some View {
         VStack {
             Text("Stops for \(route.name)")
                 .font(.title)
-            List {
-                ForEach(stops) { stop in
-                    StopCellView(stop: stop, color: color)
+
+            TabView {
+                StopListView(dataService: dataService, route: route, color: color).tabItem {
+                    Label("Weekday", systemImage: "1.circle")
+                }
+                
+                Text("Saturday").tabItem {
+                    Label("Saturday", systemImage: "2.circle")
+                }
+                
+                Text("Sunday").tabItem {
+                    Label("Sunday", systemImage: "3.circle")
                 }
             }
         }
@@ -31,6 +38,6 @@ struct StopsView: View {
 
 struct StopsView_Previews: PreviewProvider {
     static var previews: some View {
-        StopsView(route: K.PREVIEW_ROUTE, color: Color.purple)
+        StopsView(dataService: DataService(), route: K.PREVIEW_ROUTE, color: Color.purple)
     }
 }

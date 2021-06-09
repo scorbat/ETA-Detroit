@@ -10,6 +10,7 @@
 		840F2D9A266FB69B002A8BA6 /* StopsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2D99266FB69B002A8BA6 /* StopsView.swift */; };
 		840F2D9C266FB8C5002A8BA6 /* StopCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2D9B266FB8C5002A8BA6 /* StopCellView.swift */; };
 		840F2DA1266FDAA3002A8BA6 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2DA0266FDAA3002A8BA6 /* HexColor.swift */; };
+		840F2DA726700925002A8BA6 /* StopListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F2DA626700925002A8BA6 /* StopListView.swift */; };
 		84B57134266951A700D88A7C /* ETA_DetroitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B57133266951A700D88A7C /* ETA_DetroitApp.swift */; };
 		84B57136266951A700D88A7C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B57135266951A700D88A7C /* ContentView.swift */; };
 		84B57138266951A800D88A7C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84B57137266951A800D88A7C /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		840F2D99266FB69B002A8BA6 /* StopsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopsView.swift; sourceTree = "<group>"; };
 		840F2D9B266FB8C5002A8BA6 /* StopCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopCellView.swift; sourceTree = "<group>"; };
 		840F2DA0266FDAA3002A8BA6 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
+		840F2DA626700925002A8BA6 /* StopListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StopListView.swift; sourceTree = "<group>"; };
 		84B57130266951A700D88A7C /* ETA Detroit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ETA Detroit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84B57133266951A700D88A7C /* ETA_DetroitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETA_DetroitApp.swift; sourceTree = "<group>"; };
 		84B57135266951A700D88A7C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				840F2D99266FB69B002A8BA6 /* StopsView.swift */,
 				840F2D9B266FB8C5002A8BA6 /* StopCellView.swift */,
 				840F2DA0266FDAA3002A8BA6 /* HexColor.swift */,
+				840F2DA626700925002A8BA6 /* StopListView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				84E37CF7266A654B00D82E28 /* CompanyCellView.swift in Sources */,
 				840F2D9C266FB8C5002A8BA6 /* StopCellView.swift in Sources */,
 				84E15050266E8406005B1C15 /* Route.swift in Sources */,
+				840F2DA726700925002A8BA6 /* StopListView.swift in Sources */,
 				84B5713D266951A800D88A7C /* Persistence.swift in Sources */,
 				840F2DA1266FDAA3002A8BA6 /* HexColor.swift in Sources */,
 				84E37CF9266A840800D82E28 /* DataService.swift in Sources */,

@@ -9,9 +9,13 @@ import Foundation
 
 struct Stop: Identifiable {
     
-    var id: Int
-    let name: String
-    let latitude: Double
-    let longitude: Double
+    let stopID: Int
+    let dayID: Int
+    let directionID: Int
+    
+    //compute unique id (can't use stop_id since there are multiple of same id)
+    var id: String {
+        return "\(stopID),\(dayID),\(directionID)"
+    }
     
 }

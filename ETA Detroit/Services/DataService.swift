@@ -8,10 +8,11 @@
 import SwiftUI
 import SQLite
 
-class DataService {
+class DataService: ObservableObject {
     
-    //singleton structure so multiple connections aren't made
-    public static let shared = DataService()
+    @Published var companies = [Company]()
+    @Published var routes = [Route]()
+    @Published var stops = [Stop]()
     
     private let db: Connection
     
@@ -27,7 +28,7 @@ class DataService {
     //MARK: - Database Methods
     
     //fetches the list of companies monitored by the app
-    func fetchCompanies() -> [Company] {
+    func fetchCompanies() {
         var companies = [Company]()
         //create elements for query
         let companiesTable = Table("companies")
@@ -54,13 +55,13 @@ class DataService {
             print("Failed to perform query for companies, \(error)")
         }
         
-        return companies
+        self.companies = companies
     }
     
     /**
         Fetches routes for a given company and returns an array of route models
      */
-    func fetchRoutes(for company: Company) -> [Route] {
+    func fetchRoutes(for company: Company) {
         var routes = [Route]()
         
         let routesTable = Table("routes")
@@ -89,50 +90,90 @@ class DataService {
             print("Failed to perform query for routes, \(error)")
         }
         
-        return routes
+        self.routes = routes
     }
     
     /**
             Fetches stops from the database for a given route, and returns an
                 array of Stop models
      */
-    func fetchStops(for route: Route) -> [Stop] {
+    func fetchStops(for route: Route) {
         var stops = [Stop]()
         
         let routeStopsTable = Table("route_stops")
         let routeID = Expression<Int>("route_id")
         let stopID = Expression<Int>("stop_id")
+        let dayID = Expression<Int>("day_id")
+        let directionID = Expression<Int>("direction_id")
         
-        let stopsTable = Table("stops")
-        let name = Expression<String>("name")
-        let latitude = Expression<Double>("latitude")
-        let longitude = Expression<Double>("longitude")
-        
-        var query = routeStopsTable.filter(routeID == route.id)
+        let query = routeStopsTable.filter(routeID == route.id)
         
         do {
-            //store stop ids associated with given route
-            var stopIDs = [Int]()
-            
             for routeStop in try db.prepare(query) {
-                stopIDs.append(routeStop[stopID])
-            }
-            
-            //query the stops table to get other stop information
-            query = stopsTable.filter(stopIDs.contains(stopID))
-            for stop in try db.prepare(query) {
-                stops.append(Stop(
-                                id: stop[stopID],
-                                name: stop[name],
-                                latitude: stop[latitude],
-                                longitude: stop[longitude]
-                ))
+                stops.append(
+                    Stop(
+                        stopID: routeStop[stopID],
+                        dayID: routeStop[dayID],
+                        directionID: routeStop[directionID]
+                    )
+                )
             }
         } catch {
             print("Failed to perform query for fetching route stops, \(error)")
         }
         
-        return stops
+        self.stops = stops
+    }
+    
+    /**
+     returns the info for a given stop based on the stop id
+     info returned includes the name and coordinates of the stop
+     */
+    func getStopInfo(for stop: Stop) -> (name: String, latitude: Double, longitude: Double)? {
+        let stopsTable = Table("stops")
+        let id = Expression<Int>("stop_id")
+        let name = Expression<String>("name")
+        let latitude = Expression<Double>("latitude")
+        let longitude = Expression<Double>("longitude")
+        
+        let query = stopsTable.filter(id == stop.stopID)
+        
+        if let entry = try? db.pluck(query) {
+            return (
+                name: entry[name],
+                latitude: entry[latitude],
+                longitude: entry[longitude]
+            )
+        }
+        
+        return nil
+    }
+    
+    /**
+     returns the name of a given direction ID from the database
+     */
+    func getDirectionName(for directionID: Int) -> String {
+        let directionsTable = Table("directions")
+        let id = Expression<Int>("id")
+        let name = Expression<String>("name")
+        
+        let query = directionsTable.filter(id == directionID)
+        
+        let entry = try! db.pluck(query)!
+        
+        return entry[name]
+    }
+    
+    func getDayName(for dayID: Int) -> String {
+        let daysTable = Table("days_of_operation")
+        let id = Expression<Int>("id")
+        let name = Expression<String>("day")
+        
+        let query = daysTable.filter(id == dayID)
+        
+        let entry = try! db.pluck(query)!
+        
+        return entry[name]
     }
     
 }

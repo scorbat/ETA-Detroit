@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    private let companies: [Company] = DataService.shared.fetchCompanies()
+    @StateObject var dataService = DataService()
 
     var body: some View {
         NavigationView {
@@ -18,9 +18,9 @@ struct ContentView: View {
                 Text("ETA Detroit")
                     .font(.title)
                 List {
-                    ForEach(companies) { company in
+                    ForEach(dataService.companies) { company in
                         NavigationLink(
-                            destination: RoutesView(company: company),
+                            destination: RoutesView(dataService: dataService, company: company),
                             label: {
                                 CompanyCellView(
                                     name: company.name,
@@ -30,6 +30,9 @@ struct ContentView: View {
                     }
                 }
             }
+        }
+        .onAppear {
+            dataService.fetchCompanies()
         }
     }
 }
