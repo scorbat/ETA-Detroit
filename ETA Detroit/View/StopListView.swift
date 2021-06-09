@@ -15,10 +15,8 @@ struct StopListView: View {
     let color: Color
     
     var body: some View {
-        List {
-            ForEach(dataService.stops) { stop in
-                StopCellView(dataService: dataService, stop: stop, color: color)
-            }
+        List(dataService.stops) { stop in
+            StopCellView(dataService: dataService, stop: stop, color: color)
         }
         .onAppear {
             dataService.fetchStops(for: route)

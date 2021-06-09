@@ -17,14 +17,12 @@ struct RoutesView: View {
         VStack {
             Text("\(company.name) Routes")
                 .font(.title)
-            List {
-                ForEach(dataService.routes) { route in
-                    NavigationLink(
-                        destination: StopsView(dataService: dataService, route: route, color: company.color),
-                        label: {
-                            RouteCellView(route: route, color: company.color)
-                        })
-                }
+            List(dataService.routes) { route in
+                NavigationLink(
+                    destination: StopsView(dataService: dataService, route: route, color: company.color),
+                    label: {
+                        RouteCellView(route: route, color: company.color)
+                    })
             }
         }
         .onAppear {

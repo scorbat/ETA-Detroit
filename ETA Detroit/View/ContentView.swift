@@ -17,17 +17,15 @@ struct ContentView: View {
             VStack {
                 Text("ETA Detroit")
                     .font(.title)
-                List {
-                    ForEach(dataService.companies) { company in
-                        NavigationLink(
-                            destination: RoutesView(dataService: dataService, company: company),
-                            label: {
-                                CompanyCellView(
-                                    name: company.name,
-                                    imageURL: company.imageURL
-                                )
-                            })
-                    }
+                List(dataService.companies) { company in
+                    NavigationLink(
+                        destination: RoutesView(dataService: dataService, company: company),
+                        label: {
+                            CompanyCellView(
+                                name: company.name,
+                                imageURL: company.imageURL
+                            )
+                        })
                 }
             }
         }
