@@ -11,6 +11,7 @@ struct StopListView: View {
     
     @ObservedObject var dataService: DataService
     
+    let stopFilter: StopFilter
     let route: Route
     let color: Color
     
@@ -19,13 +20,13 @@ struct StopListView: View {
             StopCellView(dataService: dataService, stop: stop, color: color)
         }
         .onAppear {
-            dataService.fetchStops(for: route)
+            dataService.fetchStops(for: route, filter: stopFilter)
         }
     }
 }
 
 struct StopListView_Previews: PreviewProvider {
     static var previews: some View {
-        StopListView(dataService: DataService(), route: K.PREVIEW_ROUTE, color: Color.purple)
+        StopListView(dataService: DataService(), stopFilter: .none, route: K.PREVIEW_ROUTE, color: Color.purple)
     }
 }

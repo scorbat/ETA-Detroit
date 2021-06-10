@@ -18,22 +18,14 @@ struct StopCellView: View {
         return dataService.getStopInfo(for: stop)!
     }
     
-    var direction: String {
-        return dataService.getDirectionName(for: stop.directionID)
-    }
-    
-    var day: String {
-        return dataService.getDayName(for: stop.dayID)
-    }
-    
     var body: some View {
         VStack(alignment: .leading) {
             Text(stopInfo.name)
                 .font(.headline)
                 .foregroundColor(color)
             Text("\(stopInfo.latitude), \(stopInfo.longitude)")
-            Text(direction)
-            Text(day)
+            Text(stop.direction)
+            Text(stop.day)
         }
     }
 }
