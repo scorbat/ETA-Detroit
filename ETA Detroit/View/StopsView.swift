@@ -31,11 +31,16 @@ struct StopsView: View {
 //                StopListView(dataService: dataService, stopFilter: .sunday, route: route, color: color).tabItem {
 //                    Label("Sunday", systemImage: "3.circle")
 //                }
-                
-                ForEach(dataService.stops.sorted(by: >), id: \.key) { key, value in
-                    
+                ForEach(dataService.getDaysOfCurrentStops(), id: \.self) { day in
+                    Text(day)
+                        .tabItem {
+                            Label(day, systemImage: "1.circle")
+                        }
                 }
             }
+        }
+        .onAppear {
+            dataService.fetchStops(for: route)
         }
     }
 }

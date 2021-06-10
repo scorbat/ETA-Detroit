@@ -15,6 +15,23 @@ class DataService: ObservableObject {
     //@Published var stops = [Stop]()
     @Published var stops = [String : [Stop]]() //map day of operation to list of stops
     
+    //computed properties used for ForEach views since these resolve to RandomAccessCollections
+    var weekdayStops: [Stop]? {
+        return stops[K.DAY_WEEKDAY]
+    }
+    
+    var saturdayStops: [Stop]? {
+        return stops[K.DAY_SATURDAY]
+    }
+    
+    var sundayStops: [Stop]? {
+        return stops[K.DAY_SUNDAY]
+    }
+    
+    var everydayStops: [Stop]? {
+        return stops[K.DAY_EVERYDAY]
+    }
+    
     private let db: Connection
     
     init() {
@@ -197,6 +214,32 @@ class DataService: ObservableObject {
         let entry = try! db.pluck(query)!
         
         return entry[name]
+    }
+    
+    //MARK: - Utility Methods
+    
+    func getDaysOfCurrentStops() -> [String] {
+        var existingDays = [String]()
+        
+        //reminder that swift uses short circuit evaluation
+        //so the second use of the array can be force unwrapped
+        if weekdayStops != nil && !weekdayStops!.isEmpty {
+            existingDays.append(K.DAY_WEEKDAY)
+        }
+        
+        if saturdayStops != nil && !saturdayStops!.isEmpty {
+            existingDays.append(K.DAY_SATURDAY)
+        }
+        
+        if sundayStops != nil && !sundayStops!.isEmpty {
+            existingDays.append(K.DAY_SUNDAY)
+        }
+        
+        if everydayStops != nil && !everydayStops!.isEmpty {
+            existingDays.append(K.DAY_EVERYDAY)
+        }
+        
+        return existingDays
     }
     
 }
