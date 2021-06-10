@@ -20,16 +20,20 @@ struct StopsView: View {
                 .font(.title)
 
             TabView {
-                StopListView(dataService: dataService, stopFilter: .weekday, route: route, color: color).tabItem {
-                    Label("Weekday", systemImage: "1.circle")
-                }
+//                StopListView(dataService: dataService, stopFilter: .weekday, route: route, color: color).tabItem {
+//                    Label("Weekday", systemImage: "1.circle")
+//                }
+//
+//                StopListView(dataService: dataService, stopFilter: .saturday, route: route, color: color).tabItem {
+//                    Label("Saturday", systemImage: "2.circle")
+//                }
+//
+//                StopListView(dataService: dataService, stopFilter: .sunday, route: route, color: color).tabItem {
+//                    Label("Sunday", systemImage: "3.circle")
+//                }
                 
-                StopListView(dataService: dataService, stopFilter: .saturday, route: route, color: color).tabItem {
-                    Label("Saturday", systemImage: "2.circle")
-                }
-                
-                StopListView(dataService: dataService, stopFilter: .sunday, route: route, color: color).tabItem {
-                    Label("Sunday", systemImage: "3.circle")
+                ForEach(dataService.stops.sorted(by: >), id: \.key) { key, value in
+                    
                 }
             }
         }

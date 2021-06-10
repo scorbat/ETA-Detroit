@@ -12,7 +12,8 @@ class DataService: ObservableObject {
     
     @Published var companies = [Company]()
     @Published var routes = [Route]()
-    @Published var stops = [Stop]()
+    //@Published var stops = [Stop]()
+    @Published var stops = [String : [Stop]]() //map day of operation to list of stops
     
     private let db: Connection
     
@@ -97,8 +98,8 @@ class DataService: ObservableObject {
             Fetches stops from the database for a given route, and returns an
                 array of Stop models
      */
-    func fetchStops(for route: Route, filter: StopFilter) {
-        var stops = [Stop]()
+    func fetchStops(for route: Route) {
+        var stops = [String : [Stop]]()
         
         let routeStopsTable = Table("route_stops")
         let routeID = Expression<Int>("route_id")
@@ -106,23 +107,45 @@ class DataService: ObservableObject {
         let dayID = Expression<Int>("day_id")
         let directionID = Expression<Int>("direction_id")
         
-        let query = routeStopsTable.filter(routeID == route.id)
-        
-        do {
-            for routeStop in try db.prepare(query) {
-                stops.append(
+        let days = fetchDaysOfOperation()
+        for day in days {
+            var stopsForDay = [Stop]()
+            
+            let query = routeStopsTable         //SELECT * FROM route_stops
+                .filter(routeID == route.id)    //WHERE route_id == route.id
+                .filter(dayID == day.key)       //AND day_id == day.id
+            
+            for entry in try! db.prepare(query) {
+                stopsForDay.append(
                     Stop(
-                        stopID: routeStop[stopID],
-                        day: getDayName(for: routeStop[dayID]),
-                        direction: getDirectionName(for: routeStop[directionID])
+                        stopID: entry[stopID],
+                        day: day.value,
+                        direction: getDirectionName(for: entry[directionID])
                     )
                 )
             }
-        } catch {
-            print("Failed to perform query for fetching route stops, \(error)")
+            
+            stops[day.value] = stopsForDay
         }
         
-        self.stops = stops.filter(filter.filterMethod)
+        self.stops = stops
+    }
+    
+    /**
+     Fetches table of days of operation from database
+     */
+    private func fetchDaysOfOperation() -> [Int : String] {
+        var days = [Int : String]()
+        
+        let daysTable = Table("days_of_operation")
+        let id = Expression<Int>("id")
+        let name = Expression<String>("day")
+        
+        for day in try! db.prepare(daysTable) {
+            days[day[id]] = day[name]
+        }
+        
+        return days
     }
     
     /**
