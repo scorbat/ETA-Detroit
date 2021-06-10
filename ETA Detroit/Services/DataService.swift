@@ -218,6 +218,10 @@ class DataService: ObservableObject {
     
     //MARK: - Utility Methods
     
+    /**
+     Returns a list of the operating days that are currently represented in the
+     set of stops for a route
+     */
     func getDaysOfCurrentStops() -> [String] {
         var existingDays = [String]()
         
@@ -240,48 +244,6 @@ class DataService: ObservableObject {
         }
         
         return existingDays
-    }
-    
-}
-
-//MARK: - Stop Filter Type
-
-/**
- Represents a day filter to apply to Stop arrays.  Essentially a wrapper for a filter method to allow easier readability
- where the filters are used. E.g. the ability to use .none or .weekday in code
- */
-struct StopFilter {
-    
-    let filterMethod: (Stop) -> Bool
-    
-    static let none = StopFilter { _ in
-        return true
-    }
-    
-    static let weekday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_WEEKDAY, K.DAY_EVERYDAY)
-    }
-    
-    static let saturday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_SATURDAY, K.DAY_EVERYDAY)
-    }
-    
-    static let sunday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_SUNDAY, K.DAY_EVERYDAY)
-    }
-    
-    /**
-     private helper function to keep code for default filters DRY.
-     because each default filter compares to both its respective day and EVERYDAY
-     */
-    private static func compareIgnoreCase(_ value: String, to items: String...) -> Bool {
-        for item in items {
-            if value.lowercased() == item.lowercased() {
-                return true
-            }
-        }
-        
-        return false
     }
     
 }

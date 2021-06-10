@@ -20,22 +20,13 @@ struct StopsView: View {
                 .font(.title)
 
             TabView {
-//                StopListView(dataService: dataService, stopFilter: .weekday, route: route, color: color).tabItem {
-//                    Label("Weekday", systemImage: "1.circle")
-//                }
-//
-//                StopListView(dataService: dataService, stopFilter: .saturday, route: route, color: color).tabItem {
-//                    Label("Saturday", systemImage: "2.circle")
-//                }
-//
-//                StopListView(dataService: dataService, stopFilter: .sunday, route: route, color: color).tabItem {
-//                    Label("Sunday", systemImage: "3.circle")
-//                }
                 ForEach(dataService.getDaysOfCurrentStops(), id: \.self) { day in
-                    Text(day)
-                        .tabItem {
-                            Label(day, systemImage: "1.circle")
-                        }
+                    List(dataService.stops[day]!) { stop in
+                        StopCellView(dataService: dataService, stop: stop, color: color)
+                    }
+                    .tabItem {
+                        Label(day, systemImage: "1.circle")
+                    }
                 }
             }
         }
