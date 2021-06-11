@@ -259,4 +259,14 @@ struct StopFilter {
         return compareIgnoreCase(stop.day, to: K.DAY_EVERYDAY)
     }
     
+    private static func compareIgnoreCase(_ val: String, to items: String...) -> Bool {
+        for item in items {
+            if val.lowercased() == item.lowercased() {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
 }
