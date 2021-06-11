@@ -14,6 +14,22 @@ class DataService: ObservableObject {
     @Published var routes = [Route]()
     @Published var stops = [Stop]()
     
+    var weekdayStops: [Stop] {
+        return runStopFilter(.weekday)
+    }
+    
+    var saturdayStops: [Stop] {
+        return runStopFilter(.saturday)
+    }
+    
+    var sundayStops: [Stop] {
+        return runStopFilter(.sunday)
+    }
+    
+    var everydayStops: [Stop] {
+        return runStopFilter(.everyday)
+    }
+    
     private let db: Connection
     
     init() {
@@ -122,7 +138,7 @@ class DataService: ObservableObject {
             print("Failed to perform query for fetching route stops, \(error)")
         }
         
-        self.stops = stops.filter(filter.filterMethod)
+        self.stops = stops
     }
     
     /**
@@ -176,6 +192,24 @@ class DataService: ObservableObject {
         return entry[name]
     }
     
+    //MARK: - Utility functions
+    
+    private func runStopFilter(_ filter: StopFilter) -> [Stop] {
+        return stops.filter(filter.filterMethod)
+    }
+    
+    func availableDays() -> Int {
+        var count = 0
+        
+        //if a list is empty, then it is not an available day
+        count += weekdayStops.isEmpty ? 0 : 1
+        count += saturdayStops.isEmpty ? 0 : 1
+        count += sundayStops.isEmpty ? 0 : 1
+        count += everydayStops.isEmpty ? 0 : 1
+        
+        return count
+    }
+    
 }
 
 //MARK: - Stop Filter Type
@@ -193,15 +227,19 @@ struct StopFilter {
     }
     
     static let weekday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_WEEKDAY, K.DAY_EVERYDAY)
+        return compareIgnoreCase(stop.day, to: K.DAY_WEEKDAY)
     }
     
     static let saturday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_SATURDAY, K.DAY_EVERYDAY)
+        return compareIgnoreCase(stop.day, to: K.DAY_SATURDAY)
     }
     
     static let sunday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_SUNDAY, K.DAY_EVERYDAY)
+        return compareIgnoreCase(stop.day, to: K.DAY_SUNDAY)
+    }
+    
+    static let everyday = StopFilter { stop in
+        return compareIgnoreCase(stop.day, to: K.DAY_EVERYDAY)
     }
     
     /**
