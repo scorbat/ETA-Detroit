@@ -142,6 +142,23 @@ class DataService: ObservableObject {
     }
     
     /**
+     Fetches table of days of operation from database
+     */
+    private func fetchDaysOfOperation() -> [Int : String] {
+        var days = [Int : String]()
+        
+        let daysTable = Table("days_of_operation")
+        let id = Expression<Int>("id")
+        let name = Expression<String>("day")
+        
+        for day in try! db.prepare(daysTable) {
+            days[day[id]] = day[name]
+        }
+      
+        return days
+    }
+    
+    /**
      returns the info for a given stop based on the stop id
      info returned includes the name and coordinates of the stop
      */
@@ -240,20 +257,6 @@ struct StopFilter {
     
     static let everyday = StopFilter { stop in
         return compareIgnoreCase(stop.day, to: K.DAY_EVERYDAY)
-    }
-    
-    /**
-     private helper function to keep code for default filters DRY.
-     because each default filter compares to both its respective day and EVERYDAY
-     */
-    private static func compareIgnoreCase(_ value: String, to items: String...) -> Bool {
-        for item in items {
-            if value.lowercased() == item.lowercased() {
-                return true
-            }
-        }
-        
-        return false
     }
     
 }

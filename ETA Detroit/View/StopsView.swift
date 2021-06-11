@@ -14,6 +14,10 @@ struct StopsView: View {
     let route: Route
     let color: Color
     
+    var existingDays: [String] {
+        return dataService.getDaysOfCurrentStops()
+    }
+    
     var body: some View {
         VStack {
             Text("Stops for \(route.name)")
