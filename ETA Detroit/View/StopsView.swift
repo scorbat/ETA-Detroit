@@ -23,30 +23,50 @@ struct StopsView: View {
             Text("Stops for \(route.name)")
                 .font(.title)
 
-            //if there are multiple options then display those
-            if existingDays.count > 1 {
+//            TabView {
+//                StopListView(dataService: dataService, stopFilter: .weekday, route: route, color: color).tabItem {
+//                    Label("Weekday", systemImage: "1.circle")
+//                }
+//
+//                StopListView(dataService: dataService, stopFilter: .saturday, route: route, color: color).tabItem {
+//                    Label("Saturday", systemImage: "2.circle")
+//                }
+//
+//                StopListView(dataService: dataService, stopFilter: .sunday, route: route, color: color).tabItem {
+//                    Label("Sunday", systemImage: "3.circle")
+//                }
+//            }
+            if dataService.availableDays() > 1 {
                 TabView {
-                    ForEach(existingDays, id: \.self) { day in
-                        List(dataService.stops[day]!) { stop in
-                            StopCellView(dataService: dataService, stop: stop, color: color)
-                        }
-                        .tabItem {
-                            Label(day, systemImage: "1.circle")
-                        }
+                    if !dataService.weekdayStops.isEmpty {
+                        Text("Weekday")
+                            .tabItem {
+                                Label("Weekday", systemImage: "1.circle")
+                            }
+                    }
+                    
+                    if !dataService.saturdayStops.isEmpty {
+                        Text("Saturday")
+                            .tabItem {
+                                Label("Saturday", systemImage: "1.circle")
+                            }
+                    }
+                    
+                    if !dataService.sundayStops.isEmpty {
+                        Text("Sunday")
+                            .tabItem {
+                                Label("Sunday", systemImage: "1.circle")
+                            }
                     }
                 }
-            //otherwise don't display the option
-            } else if existingDays.count == 1 {
-                List(dataService.stops[existingDays[0]]!) { stop in
-                    StopCellView(dataService: dataService, stop: stop, color: color)
-                }
-                .tabItem {
-                    Label(existingDays[0], systemImage: "1.circle")
-                }
+            } else if dataService.availableDays() == 1 {
+                
             }
         }
         .onAppear {
-            dataService.fetchStops(for: route)
+            dataService.fetchStops(for: route, filter: .none)
+            print(dataService.stops.count)
+            print(dataService.weekdayStops.count)
         }
     }
 }

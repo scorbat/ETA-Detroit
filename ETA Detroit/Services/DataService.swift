@@ -12,24 +12,22 @@ class DataService: ObservableObject {
     
     @Published var companies = [Company]()
     @Published var routes = [Route]()
-    //@Published var stops = [Stop]()
-    @Published var stops = [String : [Stop]]() //map day of operation to list of stops
+    @Published var stops = [Stop]()
     
-    //computed properties used for ForEach views since these resolve to RandomAccessCollections
-    var weekdayStops: [Stop]? {
-        return stops[K.DAY_WEEKDAY]
+    var weekdayStops: [Stop] {
+        return runStopFilter(.weekday)
     }
     
-    var saturdayStops: [Stop]? {
-        return stops[K.DAY_SATURDAY]
+    var saturdayStops: [Stop] {
+        return runStopFilter(.saturday)
     }
     
-    var sundayStops: [Stop]? {
-        return stops[K.DAY_SUNDAY]
+    var sundayStops: [Stop] {
+        return runStopFilter(.sunday)
     }
     
-    var everydayStops: [Stop]? {
-        return stops[K.DAY_EVERYDAY]
+    var everydayStops: [Stop] {
+        return runStopFilter(.everyday)
     }
     
     private let db: Connection
@@ -115,8 +113,8 @@ class DataService: ObservableObject {
             Fetches stops from the database for a given route, and returns an
                 array of Stop models
      */
-    func fetchStops(for route: Route) {
-        var stops = [String : [Stop]]()
+    func fetchStops(for route: Route, filter: StopFilter) {
+        var stops = [Stop]()
         
         let routeStopsTable = Table("route_stops")
         let routeID = Expression<Int>("route_id")
@@ -124,25 +122,20 @@ class DataService: ObservableObject {
         let dayID = Expression<Int>("day_id")
         let directionID = Expression<Int>("direction_id")
         
-        let days = fetchDaysOfOperation()
-        for day in days {
-            var stopsForDay = [Stop]()
-            
-            let query = routeStopsTable         //SELECT * FROM route_stops
-                .filter(routeID == route.id)    //WHERE route_id == route.id
-                .filter(dayID == day.key)       //AND day_id == day.id
-            
-            for entry in try! db.prepare(query) {
-                stopsForDay.append(
+        let query = routeStopsTable.filter(routeID == route.id)
+        
+        do {
+            for routeStop in try db.prepare(query) {
+                stops.append(
                     Stop(
-                        stopID: entry[stopID],
-                        day: day.value,
-                        direction: getDirectionName(for: entry[directionID])
+                        stopID: routeStop[stopID],
+                        day: getDayName(for: routeStop[dayID]),
+                        direction: getDirectionName(for: routeStop[directionID])
                     )
                 )
             }
-            
-            stops[day.value] = stopsForDay
+        } catch {
+            print("Failed to perform query for fetching route stops, \(error)")
         }
         
         self.stops = stops
@@ -161,7 +154,7 @@ class DataService: ObservableObject {
         for day in try! db.prepare(daysTable) {
             days[day[id]] = day[name]
         }
-        
+      
         return days
     }
     
@@ -216,34 +209,54 @@ class DataService: ObservableObject {
         return entry[name]
     }
     
-    //MARK: - Utility Methods
+    //MARK: - Utility functions
     
-    /**
-     Returns a list of the operating days that are currently represented in the
-     set of stops for a route
-     */
-    func getDaysOfCurrentStops() -> [String] {
-        var existingDays = [String]()
+    private func runStopFilter(_ filter: StopFilter) -> [Stop] {
+        return stops.filter(filter.filterMethod)
+    }
+    
+    func availableDays() -> Int {
+        var count = 0
         
-        //reminder that swift uses short circuit evaluation
-        //so the second use of the array can be force unwrapped
-        if weekdayStops != nil && !weekdayStops!.isEmpty {
-            existingDays.append(K.DAY_WEEKDAY)
-        }
+        //if a list is empty, then it is not an available day
+        count += weekdayStops.isEmpty ? 0 : 1
+        count += saturdayStops.isEmpty ? 0 : 1
+        count += sundayStops.isEmpty ? 0 : 1
+        count += everydayStops.isEmpty ? 0 : 1
         
-        if saturdayStops != nil && !saturdayStops!.isEmpty {
-            existingDays.append(K.DAY_SATURDAY)
-        }
-        
-        if sundayStops != nil && !sundayStops!.isEmpty {
-            existingDays.append(K.DAY_SUNDAY)
-        }
-        
-        if everydayStops != nil && !everydayStops!.isEmpty {
-            existingDays.append(K.DAY_EVERYDAY)
-        }
-        
-        return existingDays
+        return count
+    }
+    
+}
+
+//MARK: - Stop Filter Type
+
+/**
+ Represents a day filter to apply to Stop arrays.  Essentially a wrapper for a filter method to allow easier readability
+ where the filters are used. E.g. the ability to use .none or .weekday in code
+ */
+struct StopFilter {
+    
+    let filterMethod: (Stop) -> Bool
+    
+    static let none = StopFilter { _ in
+        return true
+    }
+    
+    static let weekday = StopFilter { stop in
+        return compareIgnoreCase(stop.day, to: K.DAY_WEEKDAY)
+    }
+    
+    static let saturday = StopFilter { stop in
+        return compareIgnoreCase(stop.day, to: K.DAY_SATURDAY)
+    }
+    
+    static let sunday = StopFilter { stop in
+        return compareIgnoreCase(stop.day, to: K.DAY_SUNDAY)
+    }
+    
+    static let everyday = StopFilter { stop in
+        return compareIgnoreCase(stop.day, to: K.DAY_EVERYDAY)
     }
     
 }
