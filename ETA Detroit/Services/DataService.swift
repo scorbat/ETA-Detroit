@@ -14,6 +14,12 @@ class DataService: ObservableObject {
     @Published var routes = [Route]()
     @Published var stops = [Stop]()
     
+    @Published var direction: StopFilter = .westbound
+    
+    //stores the list of directions for the filtered stops
+    private var directions = [StopFilter]()
+    private var dirPointer = 0
+    
     var weekdayStops: [Stop] {
         return runStopFilter(.weekday)
     }
@@ -211,8 +217,20 @@ class DataService: ObservableObject {
     
     //MARK: - Utility functions
     
-    private func runStopFilter(_ filter: StopFilter) -> [Stop] {
-        return stops.filter(filter.filterMethod)
+    /**
+     Runs a specified filter on an array of stops.
+     If no array is specified, it uses the instance member stops by default
+     */
+    private func runStopFilter(_ filter: StopFilter, for stops: [Stop]? = nil) -> [Stop] {
+        let stops = stops ?? self.stops
+        
+        //always run given filter AND direction filter
+        let filtered = stops.filter(filter.filterMethod)
+        
+        parseExistingDirections(from: filtered)
+        
+        return filtered
+            .filter(direction.filterMethod)
     }
     
     func availableDays() -> Int {
@@ -225,6 +243,57 @@ class DataService: ObservableObject {
         count += everydayStops.isEmpty ? 0 : 1
         
         return count
+    }
+    
+    func toggleDirection() {
+        dirPointer += 1
+        
+        if dirPointer == directions.count {
+            dirPointer = 0
+        }
+        
+        direction = directions[dirPointer]
+    }
+    
+    /**
+     Takes a list of stops and gets the different directions from that list.  Assigns the found directions
+     to filters and sets the class property to those values
+     */
+    private func parseExistingDirections(from stops: [Stop]) {
+        var directions = [String]()
+        
+        //get unique list of directions
+        for stop in stops {
+            if !directions.contains(stop.direction) {
+                directions.append(stop.direction)
+            }
+        }
+        
+        var directionFilters = [StopFilter]()
+        
+        for dir in directions {
+            switch dir {
+            case K.DIRECTION_EAST:
+                directionFilters.append(.eastbound)
+                
+            case K.DIRECTION_WEST:
+                directionFilters.append(.westbound)
+                
+            case K.DIRECTION_NORTH:
+                directionFilters.append(.northbound)
+                
+            case K.DIRECTION_SOUTH:
+                directionFilters.append(.southbound)
+                
+            case K.DIRECTION_ONEWAY:
+                directionFilters.append(.oneway)
+                
+            default:
+                continue
+            }
+        }
+        
+        self.directions = directionFilters
     }
     
 }
@@ -243,6 +312,8 @@ struct StopFilter {
         return true
     }
     
+    //MARK: Day of Operation filters
+    
     static let weekday = StopFilter { stop in
         return compareIgnoreCase(stop.day, to: K.DAY_WEEKDAY)
     }
@@ -257,6 +328,28 @@ struct StopFilter {
     
     static let everyday = StopFilter { stop in
         return compareIgnoreCase(stop.day, to: K.DAY_EVERYDAY)
+    }
+    
+    //MARK: Direction filters
+    
+    static let northbound = StopFilter { stop in
+        return compareIgnoreCase(stop.direction, to: K.DIRECTION_NORTH)
+    }
+    
+    static let southbound = StopFilter { stop in
+        return compareIgnoreCase(stop.direction, to: K.DIRECTION_SOUTH)
+    }
+    
+    static let westbound = StopFilter { stop in
+        return compareIgnoreCase(stop.direction, to: K.DIRECTION_WEST)
+    }
+    
+    static let eastbound = StopFilter { stop in
+        return compareIgnoreCase(stop.direction, to: K.DIRECTION_EAST)
+    }
+    
+    static let oneway = StopFilter { stop in
+        return compareIgnoreCase(stop.direction, to: K.DIRECTION_ONEWAY)
     }
     
     private static func compareIgnoreCase(_ val: String, to items: String...) -> Bool {

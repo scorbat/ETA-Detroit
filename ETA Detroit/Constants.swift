@@ -17,6 +17,12 @@ struct K {
     public static let DAY_SUNDAY = "sunday"
     public static let DAY_EVERYDAY = "everyday"
     
+    public static let DIRECTION_SOUTH = "Southbound"
+    public static let DIRECTION_NORTH = "Northbout"
+    public static let DIRECTION_WEST = "Westbound"
+    public static let DIRECTION_EAST = "Eastbound"
+    public static let DIRECTION_ONEWAY = "Oneway"
+    
     //MARK: - Preview Constants
     
     public static let PREVIEW_COMPANY = Company(id: 2, name: "DDOT", imageURL: "ddot-logo", color: Color(hex: "#054839") ?? Color.purple)
