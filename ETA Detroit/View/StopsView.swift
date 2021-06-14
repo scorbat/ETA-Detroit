@@ -11,8 +11,6 @@ struct StopsView: View {
     
     @ObservedObject var dataService: DataService
     
-    @StateObject var controller = StopsViewController()
-    
     let route: Route
     let color: Color
     
@@ -24,7 +22,7 @@ struct StopsView: View {
             Button(action: {
                 dataService.toggleDirection()
             }) {
-                Image(systemName: "arrow.left.circle")
+                Image(systemName: "arrow.\(dataService.directionIcon).circle")
                     .resizable(resizingMode: .stretch)
             }
             .frame(width: 40.0, height: 40.0)
@@ -66,8 +64,6 @@ struct StopsView: View {
         }
         .onAppear {
             dataService.fetchStops(for: route, filter: .none)
-            
-            controller.dataService = dataService
         }
     }
 }

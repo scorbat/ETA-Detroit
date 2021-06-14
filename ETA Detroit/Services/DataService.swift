@@ -15,9 +15,13 @@ class DataService: ObservableObject {
     @Published var stops = [Stop]()
     
     @Published var direction: StopFilter = .westbound
+    @Published var directionIcon = "left"
     
     //stores the list of directions for the filtered stops
-    private var directions = [StopFilter]()
+    //tuple to store the name of the arrow icon and the filter for that direction
+    private var directions = [
+        (iconDirection: String, filter: StopFilter)
+    ]()
     private var dirPointer = 0
     
     var weekdayStops: [Stop] {
@@ -252,7 +256,11 @@ class DataService: ObservableObject {
             dirPointer = 0
         }
         
-        direction = directions[dirPointer]
+        print(dirPointer)
+        
+        //set direction filter
+        direction = directions[dirPointer].filter
+        directionIcon = directions[dirPointer].iconDirection
     }
     
     /**
@@ -260,40 +268,50 @@ class DataService: ObservableObject {
      to filters and sets the class property to those values
      */
     private func parseExistingDirections(from stops: [Stop]) {
-        var directions = [String]()
+        var directionStrings = [String]()
         
         //get unique list of directions
         for stop in stops {
-            if !directions.contains(stop.direction) {
-                directions.append(stop.direction)
+            if !directionStrings.contains(stop.direction) {
+                directionStrings.append(stop.direction)
             }
         }
         
-        var directionFilters = [StopFilter]()
+        var directions = [(iconDirection: String, filter: StopFilter)]()
         
-        for dir in directions {
+        for dir in directionStrings {
             switch dir {
             case K.DIRECTION_EAST:
-                directionFilters.append(.eastbound)
+                directions.append(
+                    (iconDirection: "right", filter: .eastbound)
+                )
                 
             case K.DIRECTION_WEST:
-                directionFilters.append(.westbound)
+                directions.append(
+                    (iconDirection: "left", filter: .westbound)
+                )
                 
             case K.DIRECTION_NORTH:
-                directionFilters.append(.northbound)
+                directions.append(
+                    (iconDirection: "up", filter: .northbound)
+                )
                 
             case K.DIRECTION_SOUTH:
-                directionFilters.append(.southbound)
+                directions.append(
+                    (iconDirection: "down", filter: .southbound)
+                )
                 
             case K.DIRECTION_ONEWAY:
-                directionFilters.append(.oneway)
+                directions.append(
+                    (iconDirection: "left", filter: .oneway)
+                )
                 
             default:
                 continue
             }
         }
         
-        self.directions = directionFilters
+        self.directions = directions
     }
     
 }
