@@ -23,40 +23,13 @@ struct StopsView: View {
                 dataService.toggleDirection()
                 dataService.fetchStops(for: route)
             }) {
-                Image(systemName: "arrow.\(dataService.directionIcon).circle")
+                Image(systemName: "arrow.\(dataService.getDirectionIcon()).circle")
                     .resizable(resizingMode: .stretch)
             }
             .frame(width: 40.0, height: 40.0)
             
             if dataService.days.count > 1 {
                 TabView {
-//                    if !dataService.weekdayStops.isEmpty {
-//                        List(dataService.weekdayStops) { stop in
-//                            StopCellView(dataService: dataService, stop: stop, color: color)
-//                        }
-//                        .tabItem {
-//                            Label("Weekday", systemImage: "1.circle")
-//                        }
-//                    }
-//
-//                    if !dataService.saturdayStops.isEmpty {
-//                        List(dataService.saturdayStops) { stop in
-//                            StopCellView(dataService: dataService, stop: stop, color: color)
-//                        }
-//                        .tabItem {
-//                            Label("Saturday", systemImage: "1.circle")
-//                        }
-//                    }
-//
-//                    if !dataService.sundayStops.isEmpty {
-//                        List(dataService.sundayStops) { stop in
-//                            StopCellView(dataService: dataService, stop: stop, color: color)
-//                        }
-//                        .tabItem {
-//                            Label("Sunday", systemImage: "1.circle")
-//                        }
-//                    }
-                    
                     ForEach(dataService.days, id: \.self) { day in
                         List(dataService.stops) { stop in
                             StopCellView(dataService: dataService, stop: stop, color: color)
