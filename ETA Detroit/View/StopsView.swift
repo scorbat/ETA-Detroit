@@ -21,49 +21,70 @@ struct StopsView: View {
             
             Button(action: {
                 dataService.toggleDirection()
+                dataService.fetchStops(for: route)
             }) {
                 Image(systemName: "arrow.\(dataService.directionIcon).circle")
                     .resizable(resizingMode: .stretch)
             }
             .frame(width: 40.0, height: 40.0)
             
-            if dataService.availableDays() > 1 {
+            if dataService.days.count > 1 {
                 TabView {
-                    if !dataService.weekdayStops.isEmpty {
-                        List(dataService.weekdayStops) { stop in
-                            StopCellView(dataService: dataService, stop: stop, color: color)
-                        }
-                        .tabItem {
-                            Label("Weekday", systemImage: "1.circle")
-                        }
-                    }
+//                    if !dataService.weekdayStops.isEmpty {
+//                        List(dataService.weekdayStops) { stop in
+//                            StopCellView(dataService: dataService, stop: stop, color: color)
+//                        }
+//                        .tabItem {
+//                            Label("Weekday", systemImage: "1.circle")
+//                        }
+//                    }
+//
+//                    if !dataService.saturdayStops.isEmpty {
+//                        List(dataService.saturdayStops) { stop in
+//                            StopCellView(dataService: dataService, stop: stop, color: color)
+//                        }
+//                        .tabItem {
+//                            Label("Saturday", systemImage: "1.circle")
+//                        }
+//                    }
+//
+//                    if !dataService.sundayStops.isEmpty {
+//                        List(dataService.sundayStops) { stop in
+//                            StopCellView(dataService: dataService, stop: stop, color: color)
+//                        }
+//                        .tabItem {
+//                            Label("Sunday", systemImage: "1.circle")
+//                        }
+//                    }
                     
-                    if !dataService.saturdayStops.isEmpty {
-                        List(dataService.saturdayStops) { stop in
+                    ForEach(dataService.days, id: \.self) { day in
+                        List(dataService.stops) { stop in
                             StopCellView(dataService: dataService, stop: stop, color: color)
                         }
                         .tabItem {
-                            Label("Saturday", systemImage: "1.circle")
+                            Text(day.capitalized)
                         }
-                    }
-                    
-                    if !dataService.sundayStops.isEmpty {
-                        List(dataService.sundayStops) { stop in
-                            StopCellView(dataService: dataService, stop: stop, color: color)
-                        }
-                        .tabItem {
-                            Label("Sunday", systemImage: "1.circle")
+                        .onAppear {
+                            //print("Selected day: \(day)")
+                            dataService.selectedDay = day
+                            dataService.fetchStops(for: route)
                         }
                     }
                 }
-            } else if dataService.availableDays() == 1 {
+            } else if dataService.days.count == 1 {
                 List(dataService.stops) { stop in
                     StopCellView(dataService: dataService, stop: stop, color: color)
                 }
             }
+            
         }
         .onAppear {
-            dataService.fetchStops(for: route, filter: .none)
+            dataService.fetchRouteData(for: route)
+            dataService.fetchStops(for: route)
+        }
+        .onDisappear {
+            dataService.selectedDay = nil
+            dataService.selectedDirection = nil
         }
     }
 }

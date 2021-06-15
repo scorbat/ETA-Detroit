@@ -13,32 +13,13 @@ class DataService: ObservableObject {
     @Published var companies = [Company]()
     @Published var routes = [Route]()
     @Published var stops = [Stop]()
-    
-    @Published var direction: StopFilter = .westbound
-    @Published var directionIcon = "left"
-    
-    //stores the list of directions for the filtered stops
-    //tuple to store the name of the arrow icon and the filter for that direction
-    private var directions = [
-        (iconDirection: String, filter: StopFilter)
-    ]()
+
+    var days = [String]()
+    private var directions = [String]()
     private var dirPointer = 0
     
-    var weekdayStops: [Stop] {
-        return runStopFilter(.weekday)
-    }
-    
-    var saturdayStops: [Stop] {
-        return runStopFilter(.saturday)
-    }
-    
-    var sundayStops: [Stop] {
-        return runStopFilter(.sunday)
-    }
-    
-    var everydayStops: [Stop] {
-        return runStopFilter(.everyday)
-    }
+    var selectedDay: String? = nil
+    var selectedDirection: String? = nil
     
     private let db: Connection
     
@@ -123,7 +104,7 @@ class DataService: ObservableObject {
             Fetches stops from the database for a given route, and returns an
                 array of Stop models
      */
-    func fetchStops(for route: Route, filter: StopFilter) {
+    func fetchStops(for route: Route) {
         var stops = [Stop]()
         
         let routeStopsTable = Table("route_stops")
@@ -132,9 +113,19 @@ class DataService: ObservableObject {
         let dayID = Expression<Int>("day_id")
         let directionID = Expression<Int>("direction_id")
         
-        let query = routeStopsTable.filter(routeID == route.id)
+        //stop view has additional parameters, grouped by day and direction
+        var query = routeStopsTable.filter(routeID == route.id)
+        
+        if let safeDay = selectedDay {
+            query = query.filter(dayID == getDayID(for: safeDay))
+        }
+        
+        if let safeDirection = selectedDirection {
+            query = query.filter(directionID == getDirectionID(for: safeDirection))
+        }
         
         do {
+            //get stops
             for routeStop in try db.prepare(query) {
                 stops.append(
                     Stop(
@@ -152,20 +143,51 @@ class DataService: ObservableObject {
     }
     
     /**
-     Fetches table of days of operation from database
+     Fetches the relevant directions and days of operation for a given route
      */
-    private func fetchDaysOfOperation() -> [Int : String] {
-        var days = [Int : String]()
+    func fetchRouteData(for route: Route) {
+        var days = [String]()
+        var directions = [String]()
         
-        let daysTable = Table("days_of_operation")
-        let id = Expression<Int>("id")
-        let name = Expression<String>("day")
+        let routeStopsTable = Table("route_stops")
+        let routeID = Expression<Int>("route_id")
+        let dayID = Expression<Int>("day_id")
+        let directionID = Expression<Int>("direction_id")
         
-        for day in try! db.prepare(daysTable) {
-            days[day[id]] = day[name]
+        let baseQuery = routeStopsTable.filter(routeID == route.id)
+        
+        let dayQuery = baseQuery
+            .select(dayID)
+            .group(dayID)
+        let directionQuery = baseQuery
+            .select(directionID)
+            .group(directionID)
+        
+        do {
+            //get group of days
+            for day in try db.prepare(dayQuery) {
+                days.append(getDayName(for: day[dayID]))
+            }
+            
+            //get group of directions
+            for direction in try db.prepare(directionQuery) {
+                directions.append(getDirectionName(for: direction[directionID]))
+            }
+        } catch {
+            print("Failed fetching route data, \(error)")
         }
-      
-        return days
+        
+        self.days = days
+        self.directions = directions
+        
+        //set defaults if they don't exist
+        if selectedDay == nil {
+            selectedDay = days[0]
+        }
+        
+        if selectedDirection == nil {
+            selectedDirection = directions[0]
+        }
     }
     
     /**
@@ -207,6 +229,18 @@ class DataService: ObservableObject {
         return entry[name]
     }
     
+    func getDirectionID(for direction: String) -> Int {
+        let directionsTable = Table("directions")
+        let id = Expression<Int>("id")
+        let name = Expression<String>("name")
+        
+        let query = directionsTable.filter(name == direction)
+        
+        let entry = try! db.pluck(query)!
+        
+        return entry[id]
+    }
+    
     func getDayName(for dayID: Int) -> String {
         let daysTable = Table("days_of_operation")
         let id = Expression<Int>("id")
@@ -219,35 +253,19 @@ class DataService: ObservableObject {
         return entry[name]
     }
     
+    func getDayID(for day: String) -> Int {
+        let dayTable = Table("days_of_operation")
+        let id = Expression<Int>("id")
+        let name = Expression<String>("day")
+        
+        let query = dayTable.filter(name == day)
+        
+        let entry = try! db.pluck(query)!
+        
+        return entry[id]
+    }
+    
     //MARK: - Utility functions
-    
-    /**
-     Runs a specified filter on an array of stops.
-     If no array is specified, it uses the instance member stops by default
-     */
-    private func runStopFilter(_ filter: StopFilter, for stops: [Stop]? = nil) -> [Stop] {
-        let stops = stops ?? self.stops
-        
-        //always run given filter AND direction filter
-        let filtered = stops.filter(filter.filterMethod)
-        
-        parseExistingDirections(from: filtered)
-        
-        return filtered
-            .filter(direction.filterMethod)
-    }
-    
-    func availableDays() -> Int {
-        var count = 0
-        
-        //if a list is empty, then it is not an available day
-        count += weekdayStops.isEmpty ? 0 : 1
-        count += saturdayStops.isEmpty ? 0 : 1
-        count += sundayStops.isEmpty ? 0 : 1
-        count += everydayStops.isEmpty ? 0 : 1
-        
-        return count
-    }
     
     func toggleDirection() {
         dirPointer += 1
@@ -256,128 +274,26 @@ class DataService: ObservableObject {
             dirPointer = 0
         }
         
-        print(dirPointer)
-        
-        //set direction filter
-        direction = directions[dirPointer].filter
-        directionIcon = directions[dirPointer].iconDirection
+        selectedDirection = directions[dirPointer]
     }
     
-    /**
-     Takes a list of stops and gets the different directions from that list.  Assigns the found directions
-     to filters and sets the class property to those values
-     */
-    private func parseExistingDirections(from stops: [Stop]) {
-        var directionStrings = [String]()
-        
-        //get unique list of directions
-        for stop in stops {
-            if !directionStrings.contains(stop.direction) {
-                directionStrings.append(stop.direction)
-            }
-        }
-        
-        var directions = [(iconDirection: String, filter: StopFilter)]()
-        
-        for dir in directionStrings {
-            switch dir {
-            case K.DIRECTION_EAST:
-                directions.append(
-                    (iconDirection: "right", filter: .eastbound)
-                )
-                
-            case K.DIRECTION_WEST:
-                directions.append(
-                    (iconDirection: "left", filter: .westbound)
-                )
-                
+    func getDirectionIcon() -> String {
+        if let direction = selectedDirection {
+            switch direction {
             case K.DIRECTION_NORTH:
-                directions.append(
-                    (iconDirection: "up", filter: .northbound)
-                )
-                
+                return "up"
             case K.DIRECTION_SOUTH:
-                directions.append(
-                    (iconDirection: "down", filter: .southbound)
-                )
-                
-            case K.DIRECTION_ONEWAY:
-                directions.append(
-                    (iconDirection: "left", filter: .oneway)
-                )
-                
+                return "down"
+            case K.DIRECTION_WEST:
+                return "left"
+            case K.DIRECTION_EAST:
+                return "right"
             default:
-                continue
+                return "left"
             }
         }
         
-        self.directions = directions
-    }
-    
-}
-
-//MARK: - Stop Filter Type
-
-/**
- Represents a day filter to apply to Stop arrays.  Essentially a wrapper for a filter method to allow easier readability
- where the filters are used. E.g. the ability to use .none or .weekday in code
- */
-struct StopFilter {
-    
-    let filterMethod: (Stop) -> Bool
-    
-    static let none = StopFilter { _ in
-        return true
-    }
-    
-    //MARK: Day of Operation filters
-    
-    static let weekday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_WEEKDAY)
-    }
-    
-    static let saturday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_SATURDAY)
-    }
-    
-    static let sunday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_SUNDAY)
-    }
-    
-    static let everyday = StopFilter { stop in
-        return compareIgnoreCase(stop.day, to: K.DAY_EVERYDAY)
-    }
-    
-    //MARK: Direction filters
-    
-    static let northbound = StopFilter { stop in
-        return compareIgnoreCase(stop.direction, to: K.DIRECTION_NORTH)
-    }
-    
-    static let southbound = StopFilter { stop in
-        return compareIgnoreCase(stop.direction, to: K.DIRECTION_SOUTH)
-    }
-    
-    static let westbound = StopFilter { stop in
-        return compareIgnoreCase(stop.direction, to: K.DIRECTION_WEST)
-    }
-    
-    static let eastbound = StopFilter { stop in
-        return compareIgnoreCase(stop.direction, to: K.DIRECTION_EAST)
-    }
-    
-    static let oneway = StopFilter { stop in
-        return compareIgnoreCase(stop.direction, to: K.DIRECTION_ONEWAY)
-    }
-    
-    private static func compareIgnoreCase(_ val: String, to items: String...) -> Bool {
-        for item in items {
-            if val.lowercased() == item.lowercased() {
-                return true
-            }
-        }
-        
-        return false
+        return "left"
     }
     
 }

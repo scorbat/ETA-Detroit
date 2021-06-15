@@ -18,7 +18,7 @@ struct K {
     public static let DAY_EVERYDAY = "everyday"
     
     public static let DIRECTION_SOUTH = "Southbound"
-    public static let DIRECTION_NORTH = "Northbout"
+    public static let DIRECTION_NORTH = "Northbound"
     public static let DIRECTION_WEST = "Westbound"
     public static let DIRECTION_EAST = "Eastbound"
     public static let DIRECTION_ONEWAY = "Oneway"
