@@ -19,35 +19,36 @@ struct StopsView: View {
             Text("Stops for \(route.name)")
                 .font(.title)
             
-            Button(action: {
-                dataService.toggleDirection()
-                dataService.fetchStops(for: route)
-            }) {
-                Image(systemName: "arrow.\(dataService.getDirectionIcon()).circle")
-                    .resizable(resizingMode: .stretch)
+            if dataService.directions.count > 1 {
+                Button(action: {
+                    dataService.toggleDirection()
+                    dataService.fetchStops(for: route)
+                }) {
+                    Image(systemName: "arrow.\(dataService.getDirectionIcon()).circle")
+                        .resizable(resizingMode: .stretch)
+                }
+                .frame(width: 40.0, height: 40.0)
             }
-            .frame(width: 40.0, height: 40.0)
+            
+            List(dataService.stops) { stop in
+                StopCellView(dataService: dataService, stop: stop, color: color)
+            }
+            
+            //Day selection
             
             if dataService.days.count > 1 {
-                TabView {
+                HStack {
                     ForEach(dataService.days, id: \.self) { day in
-                        List(dataService.stops) { stop in
-                            StopCellView(dataService: dataService, stop: stop, color: color)
-                        }
-                        .tabItem {
-                            Text(day.capitalized)
-                        }
-                        .onAppear {
-                            //print("Selected day: \(day)")
+                        Button(action: {
                             dataService.selectedDay = day
                             dataService.fetchStops(for: route)
+                        }) {
+                            Text(day.capitalized)
                         }
+                        .frame(maxWidth: .infinity)
                     }
                 }
-            } else if dataService.days.count == 1 {
-                List(dataService.stops) { stop in
-                    StopCellView(dataService: dataService, stop: stop, color: color)
-                }
+                .frame(maxWidth: .infinity)
             }
             
         }

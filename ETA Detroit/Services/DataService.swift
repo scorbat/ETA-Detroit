@@ -15,7 +15,7 @@ class DataService: ObservableObject {
     @Published var stops = [Stop]()
 
     var days = [String]()
-    private var directions = [String]()
+    var directions = [String]()
     private var dirPointer = 0
     
     var selectedDay: String? = nil
