@@ -27,6 +27,6 @@ struct K {
     
     public static let PREVIEW_COMPANY = Company(id: 2, name: "DDOT", imageURL: "ddot-logo", color: Color(hex: "#054839") ?? Color.purple)
     public static let PREVIEW_ROUTE = Route(id: 1, number: 1, name: "People Mover", description: nil)
-    public static let PREVIEW_STOP = Stop(stopID: 246, day: "Test Stop", direction: "westbound")
+    public static let PREVIEW_STOP = Stop(stopID: 246, day: "Test Stop", direction: "westbound", route: PREVIEW_ROUTE)
     
 }

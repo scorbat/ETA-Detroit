@@ -13,6 +13,7 @@ class DataService: ObservableObject {
     @Published var companies = [Company]()
     @Published var routes = [Route]()
     @Published var stops = [Stop]()
+    @Published var times = [Date]()
 
     var days = [String]()
     var directions = [String]()
@@ -131,7 +132,8 @@ class DataService: ObservableObject {
                     Stop(
                         stopID: routeStop[stopID],
                         day: getDayName(for: routeStop[dayID]),
-                        direction: getDirectionName(for: routeStop[directionID])
+                        direction: getDirectionName(for: routeStop[directionID]),
+                        route: route
                     )
                 )
             }
@@ -188,6 +190,71 @@ class DataService: ObservableObject {
         if selectedDirection == nil {
             selectedDirection = directions[0]
         }
+    }
+    
+    func fetchStopTimes(for stop: Stop) -> [Double] {
+        var times = [Double]()
+        
+        let table = Table("trip_stops")
+        let tripID = Expression<Int>("trip_id")
+        let stopID = Expression<Int>("stop_id")
+        let time = Expression<String>("arrival_time")
+        
+        let tripIDs = getTripIDs(for: stop.direction, on: stop.route)
+        
+        let query = table
+            .filter(stopID == stop.stopID)
+            .filter(tripIDs.contains(tripID))
+            .order(time)
+        
+        do {
+            for entry in try db.prepare(query) {
+                let date = stringToDate(entry[time])
+                
+                if let diff = date?.compareTimeToNow() {
+                    times.append(diff)
+                }
+            }
+            
+            times = times.sorted()
+            
+            //remove negative values
+            times = times.filter { value in
+                return value >= 0
+            }
+        } catch {
+            print("Failed to fetch stop times, \(error)")
+        }
+        
+        return times
+    }
+    
+    /**
+     Returns an array of trip ids that have the given direction
+     */
+    func getTripIDs(for direction: String, on route: Route) -> [Int] {
+        var tripIDs = [Int]()
+        
+        let table = Table("trips")
+        let tripIDColumn = Expression<Int>("id")
+        let routeIDColumn = Expression<Int>("route_id")
+        let directionColumn = Expression<Int>("direction_id")
+        
+        let directionID = getDirectionID(for: direction)
+        
+        let query = table
+            .filter(routeIDColumn == route.id)
+            .filter(directionColumn == directionID)
+        
+        do {
+            for entry in try db.prepare(query) {
+                tripIDs.append(entry[tripIDColumn])
+            }
+        } catch {
+            print("Error fetching trip ids, \(error)")
+        }
+        
+        return tripIDs
     }
     
     /**
@@ -294,6 +361,14 @@ class DataService: ObservableObject {
         }
         
         return "left"
+    }
+    
+    private func stringToDate(_ value: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        
+        return dateFormatter.date(from: value)
     }
     
 }
