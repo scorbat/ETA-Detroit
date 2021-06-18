@@ -11,6 +11,8 @@ struct StopCellView: View {
     
     @ObservedObject var dataService: DataService
     
+    @State var times = [Date]()
+    
     let stop: Stop
     let color: Color
     
@@ -19,27 +21,23 @@ struct StopCellView: View {
     }
     
     var body: some View {
-//        VStack(alignment: .leading) {
-//            Text(stopInfo.name)
-//                .font(.headline)
-//                .foregroundColor(color)
-//            Text("\(stopInfo.latitude), \(stopInfo.longitude)")
-//            Text(stop.direction)
-//            Text(stop.day)
-//            Text("Next stop: x minutes")
-//            Label("MORE STOP TIMES", systemImage: "clock")
-//        }
-        
         Button(action: {
-            dataService.fetchStopTimes(for: stop)
+            times = dataService.fetchStopTimes(for: stop)
         }) {
             VStack(alignment: .leading) {
                 Text(stopInfo.name)
                     .font(.headline)
                     .foregroundColor(color)
-                Text("Next stop: x minutes")
+                if times.count > 0 {
+                    Text("Next stop: x minutes (\(DateService.timeString(from: times.first!)))")
+                } else {
+                    Text("")
+                }
                 Label("MORE STOP TIMES", systemImage: "clock")
             }
+        }
+        .onAppear {
+            times = dataService.fetchStopTimes(for: stop)
         }
     }
 }

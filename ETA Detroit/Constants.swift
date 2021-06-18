@@ -12,6 +12,9 @@ struct K {
     //MARK: - Database Constants
     
     public static let SQLITE_FILE_NAME = "eta_detroit"
+    
+    public static let TIME_FORMAT = "HH:mm:ss"
+    
     public static let DAY_WEEKDAY = "weekday"
     public static let DAY_SATURDAY = "saturday"
     public static let DAY_SUNDAY = "sunday"

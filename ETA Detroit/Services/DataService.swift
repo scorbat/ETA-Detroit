@@ -13,7 +13,6 @@ class DataService: ObservableObject {
     @Published var companies = [Company]()
     @Published var routes = [Route]()
     @Published var stops = [Stop]()
-    @Published var times = [Date]()
 
     var days = [String]()
     var directions = [String]()
@@ -192,8 +191,9 @@ class DataService: ObservableObject {
         }
     }
     
-    func fetchStopTimes(for stop: Stop) -> [Double] {
-        var times = [Double]()
+    func fetchStopTimes(for stop: Stop) -> [Date] {
+        //var times = [Double]()
+        var times = [Date]()
         
         let table = Table("trip_stops")
         let tripID = Expression<Int>("trip_id")
@@ -209,18 +209,19 @@ class DataService: ObservableObject {
         
         do {
             for entry in try db.prepare(query) {
-                let date = stringToDate(entry[time])
-                
-                if let diff = date?.compareTimeToNow() {
-                    times.append(diff)
+                if let date = DateService.stringToDate(entry[time]) {
+                    times.append(date)
                 }
             }
             
-            times = times.sorted()
+            //sort by nearest time to furthest
+            times.sort { date1, date2 in
+                return date1.compareTimeToNow() < date2.compareTimeToNow()
+            }
             
-            //remove negative values
+            //remove times that already happened
             times = times.filter { value in
-                return value >= 0
+                return value.compareTimeToNow() >= 0
             }
         } catch {
             print("Failed to fetch stop times, \(error)")
@@ -361,14 +362,6 @@ class DataService: ObservableObject {
         }
         
         return "left"
-    }
-    
-    private func stringToDate(_ value: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        
-        return dateFormatter.date(from: value)
     }
     
 }
