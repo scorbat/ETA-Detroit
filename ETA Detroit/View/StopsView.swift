@@ -15,10 +15,7 @@ struct StopsView: View {
     let color: Color
     
     var body: some View {
-        VStack {
-            Text("Stops for \(route.name)")
-                .font(.title)
-            
+        VStack(spacing: 20) {
             if dataService.directions.count > 1 {
                 Button(action: {
                     dataService.toggleDirection()
@@ -30,10 +27,6 @@ struct StopsView: View {
                 .frame(width: 40.0, height: 40.0)
             }
             
-            List(dataService.stops) { stop in
-                StopCellView(dataService: dataService, stop: stop, color: color)
-            }
-            
             //Day selection
             
             if dataService.days.count > 1 {
@@ -43,14 +36,26 @@ struct StopsView: View {
                             dataService.selectedDay = day
                             dataService.fetchStops(for: route)
                         }) {
-                            Text(day.capitalized)
+                            ZStack {
+                                if isSelected(day) {
+                                    Color.blue
+                                }
+                                Text(day.capitalized)
+                                    .foregroundColor(isSelected(day) ? .white : nil)
+                            }
+                                
                         }
                         .frame(maxWidth: .infinity)
+                        .frame(height: 40.0)
                     }
                 }
                 .frame(maxWidth: .infinity)
             }
             
+            //display stops
+            List(dataService.stops) { stop in
+                StopCellView(dataService: dataService, stop: stop, color: color)
+            }
         }
         .onAppear {
             dataService.fetchRouteData(for: route)
@@ -60,6 +65,12 @@ struct StopsView: View {
             dataService.selectedDay = nil
             dataService.selectedDirection = nil
         }
+        //.navigationTitle("Stops for \(route.name)")
+        .navigationBarTitle("Stops for \(route.name)")
+    }
+    
+    private func isSelected(_ day: String) -> Bool {
+        return day == dataService.selectedDay
     }
 }
 

@@ -24,7 +24,6 @@ struct StopCellView: View {
     var body: some View {
         VStack {
             Button(action: {
-                //times = dataService.fetchStopTimes(for: stop)
                 expanded.toggle()
             }) {
                 VStack(alignment: .leading) {
@@ -45,8 +44,8 @@ struct StopCellView: View {
             
             if expanded {
                 ForEach(1..<4) { index in
-                    if let time = times[index] {
-                        Text("Bus at \(DateService.timeString(from: time))")
+                    if index < times.count {
+                        Text("Bus at \(DateService.timeString(from: times[index]))")
                     }
                 }
             }

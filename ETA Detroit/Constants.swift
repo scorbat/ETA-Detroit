@@ -29,7 +29,7 @@ struct K {
     //MARK: - Preview Constants
     
     public static let PREVIEW_COMPANY = Company(id: 2, name: "DDOT", imageURL: "ddot-logo", color: Color(hex: "#054839") ?? Color.purple)
-    public static let PREVIEW_ROUTE = Route(id: 1, number: 1, name: "People Mover", description: nil)
-    public static let PREVIEW_STOP = Stop(stopID: 246, day: "Test Stop", direction: "westbound", route: PREVIEW_ROUTE)
+    public static let PREVIEW_ROUTE = Route(id: 53, number: 1, name: "VERNOR", description: nil)
+    public static let PREVIEW_STOP = Stop(stopID: 246, day: "Test Stop", direction: "Westbound", route: PREVIEW_ROUTE)
     
 }

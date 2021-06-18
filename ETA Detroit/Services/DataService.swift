@@ -198,7 +198,7 @@ class DataService: ObservableObject {
         let table = Table("trip_stops")
         let tripID = Expression<Int>("trip_id")
         let stopID = Expression<Int>("stop_id")
-        let time = Expression<String>("arrival_time")
+        let time = Expression<String?>("arrival_time") //some arrival times are null
         
         let tripIDs = getTripIDs(for: stop.direction, on: stop.route)
         
@@ -209,7 +209,7 @@ class DataService: ObservableObject {
         
         do {
             for entry in try db.prepare(query) {
-                if let date = DateService.stringToDate(entry[time]) {
+                if let arrival = entry[time], let date = DateService.stringToDate(arrival) {
                     times.append(date)
                 }
             }
