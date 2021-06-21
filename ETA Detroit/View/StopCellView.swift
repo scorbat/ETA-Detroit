@@ -17,17 +17,13 @@ struct StopCellView: View {
     let stop: Stop
     let color: Color
     
-    var stopInfo: (name: String, latitude: Double, longitude: Double) {
-        return dataService.getStopInfo(for: stop)!
-    }
-    
     var body: some View {
         VStack {
             Button(action: {
                 expanded.toggle()
             }) {
                 VStack(alignment: .leading) {
-                    Text(stopInfo.name)
+                    Text(stop.name)
                         .font(.headline)
                         .foregroundColor(color)
                     if times.count > 0 {

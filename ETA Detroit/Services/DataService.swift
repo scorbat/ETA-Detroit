@@ -127,9 +127,17 @@ class DataService: ObservableObject {
         do {
             //get stops
             for routeStop in try db.prepare(query) {
+                //get data from separate table about name, coordinates
+                guard let stopInfo = getStopInfo(for: routeStop[stopID]) else {
+                    return
+                }
+                
                 stops.append(
                     Stop(
                         stopID: routeStop[stopID],
+                        name: stopInfo.name,
+                        latitude: stopInfo.latitude,
+                        longitude: stopInfo.longitude,
                         day: getDayName(for: routeStop[dayID]),
                         direction: getDirectionName(for: routeStop[directionID]),
                         route: route
@@ -262,14 +270,14 @@ class DataService: ObservableObject {
      returns the info for a given stop based on the stop id
      info returned includes the name and coordinates of the stop
      */
-    func getStopInfo(for stop: Stop) -> (name: String, latitude: Double, longitude: Double)? {
+    func getStopInfo(for stopID: Int) -> (name: String, latitude: Double, longitude: Double)? {
         let stopsTable = Table("stops")
         let id = Expression<Int>("stop_id")
         let name = Expression<String>("name")
         let latitude = Expression<Double>("latitude")
         let longitude = Expression<Double>("longitude")
         
-        let query = stopsTable.filter(id == stop.stopID)
+        let query = stopsTable.filter(id == stopID)
         
         if let entry = try? db.pluck(query) {
             return (

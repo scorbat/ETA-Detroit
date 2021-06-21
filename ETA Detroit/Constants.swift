@@ -26,10 +26,15 @@ struct K {
     public static let DIRECTION_EAST = "Eastbound"
     public static let DIRECTION_ONEWAY = "Oneway"
     
+    //MARK: - Map Constants
+    
+    public static let DETROIT_LATITUDE = 42.3314
+    public static let DETROIT_LONGITUDE = -83.0458
+    
     //MARK: - Preview Constants
     
     public static let PREVIEW_COMPANY = Company(id: 2, name: "DDOT", imageURL: "ddot-logo", color: Color(hex: "#054839") ?? Color.purple)
     public static let PREVIEW_ROUTE = Route(id: 53, number: 1, name: "VERNOR", description: nil)
-    public static let PREVIEW_STOP = Stop(stopID: 246, day: "Test Stop", direction: "Westbound", route: PREVIEW_ROUTE)
+    public static let PREVIEW_STOP = Stop(stopID: 246, name: "Test stop", latitude: DETROIT_LATITUDE, longitude: DETROIT_LONGITUDE, day: "Test Stop", direction: "Westbound", route: PREVIEW_ROUTE)
     
 }

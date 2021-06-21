@@ -24,6 +24,8 @@ struct StopsView: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            StopsMapView(stops: dataService.stops)
+            
             if dataService.directions.count > 1 {
                 Button(action: {
                     dataService.toggleDirection()

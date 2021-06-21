@@ -6,10 +6,14 @@
 //
 
 import Foundation
+import MapKit
 
 struct Stop: Identifiable {
     
     let stopID: Int
+    let name: String
+    let latitude: Double
+    let longitude: Double
     let day: String
     let direction: String
     let route: Route //reference to route that this stop object is on
@@ -17,6 +21,10 @@ struct Stop: Identifiable {
     //compute unique id (can't use stop_id since there are multiple of same id)
     var id: String {
         return "\(stopID),\(day),\(direction)"
+    }
+    
+    var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
 }
