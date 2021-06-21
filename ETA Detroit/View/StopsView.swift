@@ -14,6 +14,14 @@ struct StopsView: View {
     let route: Route
     let color: Color
     
+    init(dataService: DataService, route: Route, color: Color) {
+        self.dataService = dataService
+        self.route = route
+        self.color = color
+        
+        UINavigationBar.appearance().backgroundColor = UIColor(color)
+    }
+    
     var body: some View {
         VStack(spacing: 20) {
             if dataService.directions.count > 1 {
@@ -65,8 +73,9 @@ struct StopsView: View {
             dataService.selectedDay = nil
             dataService.selectedDirection = nil
         }
-        //.navigationTitle("Stops for \(route.name)")
-        .navigationBarTitle("Stops for \(route.name)")
+        .navigationBarTitle(Text("Stops for \(route.name)"), displayMode: .inline)
+        .padding(.top)
+        
     }
     
     private func isSelected(_ day: String) -> Bool {

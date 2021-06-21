@@ -12,6 +12,9 @@ import Foundation
  */
 struct DateService {
     
+    /**
+     Takes a given string from the database and converts it into a date object
+     */
     static func stringToDate(_ value: String) -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = K.TIME_FORMAT
@@ -20,11 +23,21 @@ struct DateService {
         return dateFormatter.date(from: value)
     }
     
+    /**
+     Takes a given date and converts it into a time string in 12 hour format
+     */
     static func timeString(from date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm"
         
         return dateFormatter.string(from: date)
+    }
+    
+    /**
+     Returns how many minutes until the specified date
+     */
+    static func minutes(to date: Date) -> Int {
+        return Int(date.compareTimeToNow() / 60)
     }
     
 }

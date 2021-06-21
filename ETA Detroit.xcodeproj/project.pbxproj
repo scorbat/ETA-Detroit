@@ -16,6 +16,7 @@
 		84B5713B266951A800D88A7C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84B5713A266951A800D88A7C /* Preview Assets.xcassets */; };
 		84D6D66D267A65A800D74216 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D66C267A65A800D74216 /* Date.swift */; };
 		84D6D66F267BDD5000D74216 /* DateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D66E267BDD5000D74216 /* DateService.swift */; };
+		84D6D6712680D04100D74216 /* NavigationBarStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D6D6702680D04100D74216 /* NavigationBarStyle.swift */; };
 		84E1504E266E737A005B1C15 /* RoutesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1504D266E737A005B1C15 /* RoutesView.swift */; };
 		84E15050266E8406005B1C15 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E1504F266E8406005B1C15 /* Route.swift */; };
 		84E15052266E8CE7005B1C15 /* RouteCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E15051266E8CE7005B1C15 /* RouteCellView.swift */; };
@@ -42,6 +43,7 @@
 		84B57141266951A800D88A7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D6D66C267A65A800D74216 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		84D6D66E267BDD5000D74216 /* DateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateService.swift; sourceTree = "<group>"; };
+		84D6D6702680D04100D74216 /* NavigationBarStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarStyle.swift; sourceTree = "<group>"; };
 		84E1504D266E737A005B1C15 /* RoutesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesView.swift; sourceTree = "<group>"; };
 		84E1504F266E8406005B1C15 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		84E15051266E8CE7005B1C15 /* RouteCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteCellView.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				840F2DA0266FDAA3002A8BA6 /* HexColor.swift */,
 				84D6D66C267A65A800D74216 /* Date.swift */,
+				84D6D6702680D04100D74216 /* NavigationBarStyle.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 				84E37CF9266A840800D82E28 /* DataService.swift in Sources */,
 				84E37CFC266A8B1300D82E28 /* Constants.swift in Sources */,
 				84B57136266951A700D88A7C /* ContentView.swift in Sources */,
+				84D6D6712680D04100D74216 /* NavigationBarStyle.swift in Sources */,
 				84D6D66F267BDD5000D74216 /* DateService.swift in Sources */,
 				84D6D66D267A65A800D74216 /* Date.swift in Sources */,
 				84B57134266951A700D88A7C /* ETA_DetroitApp.swift in Sources */,

@@ -31,9 +31,9 @@ struct StopCellView: View {
                         .font(.headline)
                         .foregroundColor(color)
                     if times.count > 0 {
-                        Text("Next stop: x minutes (\(DateService.timeString(from: times.first!)))")
+                        Text("Next stop: \(DateService.minutes(to: times.first!)) minutes (\(DateService.timeString(from: times.first!)))")
                     } else {
-                        Text("")
+                        Text("No stop time found")
                     }
                     Label("MORE STOP TIMES", systemImage: "clock")
                 }
