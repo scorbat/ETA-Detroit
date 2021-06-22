@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct Stop: Identifiable {
+struct Stop: Identifiable, Equatable {
     
     let stopID: Int
     let name: String
@@ -25,6 +25,10 @@ struct Stop: Identifiable {
     
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+    
+    static func == (lhs: Stop, rhs: Stop) -> Bool {
+        return lhs.stopID == rhs.stopID
     }
     
 }

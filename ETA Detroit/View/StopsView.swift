@@ -24,7 +24,7 @@ struct StopsView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            StopsMapView(stops: dataService.stops)
+            StopsMapView(stops: dataService.stops, pinColor: color)
             
             if dataService.directions.count > 1 {
                 Button(action: {

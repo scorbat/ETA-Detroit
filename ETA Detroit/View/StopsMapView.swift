@@ -10,7 +10,10 @@ import MapKit
 
 struct StopsMapView: View {
     
+    @StateObject var mapService = MapService()
+    
     @State var stops: [Stop]
+    var pinColor: Color
     
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: K.DETROIT_LATITUDE, longitude: K.DETROIT_LONGITUDE),
@@ -18,14 +21,23 @@ struct StopsMapView: View {
     )
     
     var body: some View {
-        Map(coordinateRegion: $region, annotationItems: stops) { stop in
-            MapPin(coordinate: stop.coordinate, tint: .green)
+        //when the stops are loaded, display the map with annotations
+        if stops.count > 0 {
+            Map(coordinateRegion: $mapService.region, annotationItems: stops) { stop in
+                MapPin(coordinate: stop.coordinate, tint: pinColor)
+            }
+            .onAppear {
+                mapService.generateRegion(for: stops.first!)
+            }
+        } else {
+            //show that we're loading the map
+            ProgressView()
         }
     }
 }
 
 struct StopsMapView_Previews: PreviewProvider {
     static var previews: some View {
-        StopsMapView(stops: [K.PREVIEW_STOP])
+        StopsMapView(stops: [K.PREVIEW_STOP], pinColor: .red)
     }
 }
