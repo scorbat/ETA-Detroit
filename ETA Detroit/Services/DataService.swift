@@ -200,7 +200,6 @@ class DataService: ObservableObject {
     }
     
     func fetchStopTimes(for stop: Stop) -> [Date] {
-        //var times = [Double]()
         var times = [Date]()
         
         let table = Table("trip_stops")
@@ -208,7 +207,7 @@ class DataService: ObservableObject {
         let stopID = Expression<Int>("stop_id")
         let time = Expression<String?>("arrival_time") //some arrival times are null
         
-        let tripIDs = getTripIDs(for: stop.direction, on: stop.route)
+        let tripIDs = getTripIDs(for: stop, on: stop.route)
         
         let query = table
             .filter(stopID == stop.stopID)
@@ -241,29 +240,47 @@ class DataService: ObservableObject {
     /**
      Returns an array of trip ids that have the given direction
      */
-    func getTripIDs(for direction: String, on route: Route) -> [Int] {
-        var tripIDs = [Int]()
+    func getTripIDs(for stop: Stop, on route: Route) -> [Int] {
+        //use two arrays since these data are stored in separate tables
+        var tripIDsByDirection = [Int]()
+        var tripsIDsByDay = [Int]()
         
-        let table = Table("trips")
+        let tripsTable = Table("trips")
+        let tripsDaysTable = Table("trip_days_of_operation")
+        let dayIDColumn = Expression<Int>("operation_day_id")
+        let tripDayIDColumn = Expression<Int>("trip_id")
         let tripIDColumn = Expression<Int>("id")
         let routeIDColumn = Expression<Int>("route_id")
         let directionColumn = Expression<Int>("direction_id")
         
-        let directionID = getDirectionID(for: direction)
+        let directionID = getDirectionID(for: stop.direction)
         
-        let query = table
+        //want trips only in correct direction
+        let directionQuery = tripsTable
             .filter(routeIDColumn == route.id)
             .filter(directionColumn == directionID)
         
+        //query to get trips on correct day
+        let dayID = getDayID(for: stop.day)
+        let dayQuery = tripsDaysTable
+            .filter(dayIDColumn == dayID)
+        
         do {
-            for entry in try db.prepare(query) {
-                tripIDs.append(entry[tripIDColumn])
+            //get trip ids for given direction
+            for entry in try db.prepare(directionQuery) {
+                tripIDsByDirection.append(entry[tripIDColumn])
+            }
+            
+            //get trip ids for given day
+            for entry in try db.prepare(dayQuery) {
+                tripsIDsByDay.append(entry[tripDayIDColumn])
             }
         } catch {
             print("Error fetching trip ids, \(error)")
         }
         
-        return tripIDs
+        //return intersection of the two arrays
+        return tripIDsByDirection.filter(tripsIDsByDay.contains)
     }
     
     /**
