@@ -30,10 +30,12 @@ struct StopsMapView: View {
                     VStack {
                         //if this is the selected stop, then display the name above
                         if selected == stop {
-                            Text(stop.name)
+                            MapPinTapView(text: stop.name)
                         }
                         
                         Image(systemName: "mappin")
+                            .font(.title)
+                            .foregroundColor(pinColor)
                             .onTapGesture {
                                 selected = stop
                             }
