@@ -247,8 +247,8 @@ class DataService: ObservableObject {
         
         let tripsTable = Table(K.TRIPS_TABLE)
         let tripsDaysTable = Table(K.TRIPS_DAYS_TABLE)
-        let dayIDColumn = Expression<Int>(K.TRIP_DAYS_DAY_ID)
         let tripDayIDColumn = Expression<Int>(K.TRIP_DAYS_DAY_ID)
+        let tripDaysTripIDColumn = Expression<Int>(K.TRIP_DAYS_TRIP_ID)
         let tripIDColumn = Expression<Int>(K.GENERAL_ID)
         let routeIDColumn = Expression<Int>(K.TRIPS_ROUTE_ID)
         let directionColumn = Expression<Int>(K.TRIPS_DIRECTION_ID)
@@ -263,7 +263,7 @@ class DataService: ObservableObject {
         //query to get trips on correct day
         let dayID = getDayID(for: stop.day)
         let dayQuery = tripsDaysTable
-            .filter(dayIDColumn == dayID)
+            .filter(tripDayIDColumn == dayID)
         
         do {
             //get trip ids for given direction
@@ -273,7 +273,7 @@ class DataService: ObservableObject {
             
             //get trip ids for given day
             for entry in try db.prepare(dayQuery) {
-                tripsIDsByDay.append(entry[tripDayIDColumn])
+                tripsIDsByDay.append(entry[tripDaysTripIDColumn])
             }
         } catch {
             print("Error fetching trip ids, \(error)")

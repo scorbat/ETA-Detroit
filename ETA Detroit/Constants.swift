@@ -42,8 +42,8 @@ struct K {
     
     public static let ROUTES_NUMBER = "route_number"
     public static let ROUTES_COMPANY_ID = "company_id"
-    public static let ROUTES_NAME = "name"
-    public static let ROUTES_DESCRIPTION = "description"
+    public static let ROUTES_NAME = "route_name"
+    public static let ROUTES_DESCRIPTION = "route_description"
     
     public static let ROUTE_STOPS_ROUTE_ID = "route_id"
     public static let ROUTE_STOPS_STOP_ID = "stop_id"
@@ -54,7 +54,7 @@ struct K {
     public static let TRIPS_ROUTE_ID = "route_id"
     public static let TRIPS_DIRECTION_ID = "direction_id"
     
-    public static let TRIP_DAYS_DAY_ID = "day_id"
+    public static let TRIP_DAYS_DAY_ID = "operation_day_id"
     public static let TRIP_DAYS_TRIP_ID = "trip_id"
     
     public static let TRIP_STOPS_TRIP_ID = "trip_id"
