@@ -17,7 +17,7 @@ struct DateService {
      */
     static func stringToDate(_ value: String) -> Date? {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = K.TIME_FORMAT
+        dateFormatter.dateFormat = K.DATABASE_TIME_FORMAT
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         
         return dateFormatter.date(from: value)
@@ -28,7 +28,7 @@ struct DateService {
      */
     static func timeString(from date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm"
+        dateFormatter.dateFormat = K.DISPLAY_TIME_FORMAT
         
         return dateFormatter.string(from: date)
     }

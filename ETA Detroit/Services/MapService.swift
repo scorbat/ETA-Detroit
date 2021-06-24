@@ -15,7 +15,7 @@ class MapService: ObservableObject {
     func generateRegion(for stop: Stop) {
         self.region = MKCoordinateRegion(
             center: stop.coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+            span: MKCoordinateSpan(latitudeDelta: K.LATITUDE_DELTA, longitudeDelta: K.LONGITUDE_DELTA)
         )
     }
     
