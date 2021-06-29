@@ -11,6 +11,8 @@ struct StopsView: View {
     
     @ObservedObject var dataService: DataService
     
+    @State private var searchText = ""
+    
     let route: Route
     let color: Color
     
@@ -24,6 +26,8 @@ struct StopsView: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            SearchBarView(text: $searchText)
+            
             StopsMapView(stops: dataService.stops, pinColor: color)
             
             if dataService.directions.count > 1 {
@@ -63,7 +67,10 @@ struct StopsView: View {
             }
             
             //display stops
-            List(dataService.stops) { stop in
+            List(dataService.stops.filter({ stop in
+                //case insensitive comparison
+                return searchText.isEmpty ? true : stop.name.lowercased().contains(searchText.lowercased())
+            })) { stop in
                 StopCellView(dataService: dataService, stop: stop, color: color)
             }
         }

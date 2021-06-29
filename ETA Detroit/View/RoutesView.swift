@@ -11,13 +11,17 @@ struct RoutesView: View {
     
     @ObservedObject var dataService: DataService
     
+    @State private var searchText = "" //default empty
+    
     let company: Company
     
     var body: some View {
+        SearchBarView(text: $searchText)
         VStack {
-            Text("\(company.name) Routes")
-                .font(.title)
-            List(dataService.routes) { route in
+            List(dataService.routes.filter({ route in
+                //case insensitive comparison
+                return searchText.isEmpty ? true :  route.name.lowercased().contains(searchText.lowercased())
+            })) { route in
                 NavigationLink(
                     destination: StopsView(dataService: dataService, route: route, color: company.color),
                     label: {
@@ -28,6 +32,9 @@ struct RoutesView: View {
         .onAppear {
             dataService.fetchRoutes(for: company)
         }
+        .navigationBarTitle(
+            Text("\(company.name) Routes")
+        )
     }
 }
 
